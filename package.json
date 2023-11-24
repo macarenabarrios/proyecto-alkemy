@@ -1,0 +1,31 @@
+{
+  "name": "proyecto-alkemy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/macarenabarrios/proyecto-alkemy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/macarenabarrios/proyecto-alkemy/issues"
+  },
+  "homepage": "https://github.com/macarenabarrios/proyecto-alkemy#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.6.5",
+    "sequelize": "^6.35.1"
+  }
+}
