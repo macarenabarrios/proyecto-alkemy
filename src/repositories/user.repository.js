@@ -1,8 +1,7 @@
-import { db } from "../db/index-db.js";
-
+import { User } from "../db/models/user.model.js";
 
 const findAll = async () =>{
-    const response = await db.User.findAll(
+    const response = await User.findAll(
         {
         attributes:{
             exclude:['role_id']
@@ -20,7 +19,7 @@ const findAll = async () =>{
     return response;
 }
 const findById = async (id) =>{
-    const response = await db.User.findOne({
+    const response = await User.findOne({
         attributes:{
             exclude:['role_id']
         },
@@ -38,12 +37,12 @@ const findById = async (id) =>{
 }
 const save = async (user) =>{
 
-    await db.User.create(user);
+    await User.create(user);
 
 
 }
 const update = async (id,user) =>{
-    await db.User.update(user,{
+    await User.update(user,{
         where:{
             id:id
         }

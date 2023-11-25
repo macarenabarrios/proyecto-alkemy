@@ -3,10 +3,31 @@ import dotenv from "dotenv";
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import indexRouter from './src/routes/index.route.js'
-import { sequelize } from "./src/db/index-db.js";
 import seed from "./src/db/seed.db.js";
 
 dotenv.config();
+
+//Instancia de Sequelize
+import { sequelize } from "./src/db/index.db.js"
+
+//Modelos de sequelize -> Importarte importarlos para generar las tablas
+import "./src/db/models/user.model.js"
+import "./src/db/models/book.model.js"
+import "./src/db/models/role.model.js"
+
+//Conexion y generacion de la base de datos
+const main = async () => {
+  try {
+    await sequelize.sync({ force: true });
+
+    console.log('Connection has been established successfully.');
+   
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+}
+
+main();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
