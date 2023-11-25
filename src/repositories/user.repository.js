@@ -2,11 +2,12 @@ import { User } from "../db/models/user.model.js";
 import { Role } from "../db/models/role.model.js";
 
 const findAll = async () =>{
-    const response = await User.findAll(
-        {
-        attributes:{
-            exclude:['roleId']
-        },
+    try {
+        const response = await User.findAll(
+            {
+                attributes:{
+                    exclude:['roleId']
+                },
         include:[{
             model:Role,
             attributes: ['name']
@@ -17,6 +18,12 @@ const findAll = async () =>{
     }
     );
     return response;
+        
+    } catch (error) {
+        console.error('Error de Sequelize:', error.message);
+        console.error('Error detallado:', error);
+      }
+    
 }
 const findById = async (id) =>{
     const response = await User.findOne({
@@ -35,8 +42,9 @@ const findById = async (id) =>{
     return response;
 }
 const save = async (user) =>{
-
-    await User.create(user);
+    const defaultRole = await Role.findOne({ where: { name: 'USER' } });
+    const newUser = await User.create(user);
+    await newUser.setRole(defaultRole);
 
 
 }

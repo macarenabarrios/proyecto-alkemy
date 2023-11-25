@@ -13,8 +13,11 @@ const getById = async (id) =>{
     return user ;
 }
 const create = async (user) =>{
-
-    await userRepository.save(user);
+    try {
+        await userRepository.save(user);
+    } catch (error) {
+        console.error(error);   
+    }
 
 }
 const update = async (id,user) =>{
