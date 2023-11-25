@@ -19,9 +19,8 @@ import "./src/db/models/role.model.js"
 const main = async () => {
   try {
     await sequelize.sync({ force: true });
-
+    seed()
     console.log('Connection has been established successfully.');
-   
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
@@ -45,14 +44,6 @@ console.log(process.env.DB_NAME);
 console.log(process.env.DB_USERNAME);
 console.log(process.env.DB_PASSWORD);
 console.log(process.env.DB_HOST);
-
-
-try {
-  await sequelize.sync();
-  seed();
-} catch (error) {
-console.error("Unable to connect to the database:", error);
-}
 
 
 export default app;
