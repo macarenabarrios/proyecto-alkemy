@@ -18,7 +18,7 @@ import "./src/db/models/role.model.js"
 //Conexion y generacion de la base de datos
 const main = async () => {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ alter: true });
     seed()
     console.log('Connection has been established successfully.');
   } catch (error) {
