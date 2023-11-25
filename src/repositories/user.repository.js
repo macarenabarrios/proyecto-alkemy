@@ -1,18 +1,18 @@
 import { User } from "../db/models/user.model.js";
+import { Role } from "../db/models/role.model.js";
 
 const findAll = async () =>{
     const response = await User.findAll(
         {
         attributes:{
-            exclude:['role_id']
+            exclude:['roleId']
         },
         include:[{
-            model:db.Role,
+            model:Role,
             attributes: ['name']
         }],
         where:{
             isActive:true,
-            deleted:false
         }
     }
     );
@@ -21,16 +21,15 @@ const findAll = async () =>{
 const findById = async (id) =>{
     const response = await User.findOne({
         attributes:{
-            exclude:['role_id']
+            exclude:['roleId']
         },
         include:[{
-            model:db.Role,
+            model:Role,
             attributes: ['name']
         }],
         where:{
             id:id,
             isActive:true,
-            deleted:false
         },
     });
     return response;
@@ -49,8 +48,12 @@ const update = async (id,user) =>{
     })
 }
 
-const deleteById = (id) =>{
-    //TODO
+const deleteById = async (id) =>{
+    await User.destroy({
+        where: {
+            id: id
+          },
+    });
 }
 
 export const userRepository = {findAll,findById,save,update,deleteById}

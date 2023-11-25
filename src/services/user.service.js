@@ -6,21 +6,22 @@ const getAll = async () =>{
     return response;
 }
 const getById = async (id) =>{
-    const movie = await userRepository.findById(id)
-    if(!movie){
-        throw new Error(`Movie doesn't exist with id ${id}`)
+    const user = await userRepository.findById(id)
+    if(!user){
+        throw new Error(`User doesn't exist with id ${id}`)
     }
-    return movie ;
+    return user ;
 }
-const create = async (movie) =>{
+const create = async (user) =>{
 
-    await userRepository.save(movie);
+    await userRepository.save(user);
 
 }
-const update = async (id,movie) =>{
-    await userRepository.update(id,movie);
+const update = async (id,user) =>{
+    await userRepository.update(id,user);
 }
 const deleteUser = async (id) =>{
-    //todo
+    await userRepository.deleteById(id);
+    
 }
 export const userService = {getAll,getById,create,update,deleteUser}

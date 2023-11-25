@@ -5,53 +5,59 @@ import { Role } from './role.model.js';
 import { Loan } from './loan.model.js';
 
 export const User = sequelize.define("users", {
-    id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        defaultValue: DataTypes.UUIDV4,
+    firstname: {
+        type: DataTypes.STRING,
         allowNull: false,
-    },
-    firstName: {
+      },
+      lastname: {
         type: DataTypes.STRING,
-        allowNull: false
-    },
-    lastName: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    email: {
+        allowNull: false,
+      },
+      email: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-    },
-    membershipNumber: {
-        type: DataTypes.BIGINT,
-        unique: true,
-        autoIncrement: true,
-    },
-    password: {
+        validate:{
+          isEmail: true,
+        }
+      },
+      password: {
         type: DataTypes.STRING,
-        allowNull: false
-    },
-    softDelete: {
-        type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: true,
+        validate: {
+          len: [6, 64]
+        }
+      },
+      numberMembership:{
+          type: DataTypes.STRING,
+          allowNull: false,
+          unique: true,
+          field: 'number_membership'
+      },
+    //   deleted:{
+    //       type:DataTypes.BOOLEAN,
+    //       allowNull:false,
+    //       default:false
+    //   },
+      isActive:{
+          type:DataTypes.BOOLEAN,
+          allowNull: false,
+          default: false,
+          field:'is_active'
+      },
+    },
+    {
+      paranoid:true
     }
-},
-{
-    timestamps: true
-}
 );
 
-Role.hasMany(User)
+Role.hasMany(User,{foreignKey: {name: 'roleId',field: 'role_id'} })
 
-User.belongsTo(Role)
+User.belongsTo(Role,{foreign_key: {name: 'roleId',field: 'role_id'} })
 
 User.belongsToMany(Book, {through: Loan})
 
 Book.belongsToMany(User, {through: Loan})
-
 
 
 // To create a One-To-One relationship, the hasOne and belongsTo associations are used together;
