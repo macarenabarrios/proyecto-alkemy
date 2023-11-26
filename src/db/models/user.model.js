@@ -28,11 +28,11 @@ export const User = sequelize.define("users", {
           len: [6, 64]
         }
       },
-      numberMembership:{
+      membershipNumber:{
           type: DataTypes.STRING,
           allowNull: false,
           unique: true,
-          field: 'number_membership'
+          field: 'membership_number'
       },
     //   deleted:{
     //       type:DataTypes.BOOLEAN,
