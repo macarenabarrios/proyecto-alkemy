@@ -1,34 +1,35 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from "../index.db.js"
+import { DataTypes } from "sequelize";
+import { sequelize } from "../index.db.js";
 
-
-export const Author = sequelize.define("authors", {
+export const Author = sequelize.define(
+  "authors",
+  {
     id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
     },
     firstName: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     lastName: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     birthdate: {
-        type: DataTypes.DATE,
-        allowNull: false,
+      type: DataTypes.DATE,
+      allowNull: false,
     },
     nationality: {
-        type: DataTypes.STRING,
-        autoIncrement: true,
-    }
-},
-{
-    timestamps: true
-}
+      type: DataTypes.STRING,
+      autoIncrement: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
 );
 
 //relacion entre many to many entre tabla book y author
