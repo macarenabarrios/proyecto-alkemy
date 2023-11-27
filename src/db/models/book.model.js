@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from "../index.db.js"
 
-export const Book = sequelize.define("Books", {
+const Book = sequelize.define("Books", {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
@@ -36,3 +36,5 @@ export const Book = sequelize.define("Books", {
     timestamps: true
 }
 );
+
+export default Book;

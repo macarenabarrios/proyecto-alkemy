@@ -15,10 +15,12 @@ import "./src/db/models/user.model.js"
 import "./src/db/models/book.model.js"
 import "./src/db/models/role.model.js"
 import "./src/db/models/loan.model.js"
+import "./src/db/associations.db.js"
 
 //Conexion y generacion de la base de datos
 const main = async () => {
   try {
+    
     await sequelize.sync();
     seed()
     console.log('Connection has been established successfully.');

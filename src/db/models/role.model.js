@@ -1,8 +1,7 @@
 import { sequelize } from "../index.db.js";
 import { DataTypes } from "sequelize";
-import { User } from "./user.model.js";
 
-export const Role = sequelize.define("roles", {
+const Role = sequelize.define("roles", {
 
     name: {
         type: DataTypes.STRING,
@@ -15,3 +14,5 @@ export const Role = sequelize.define("roles", {
 ) 
 
 // Role.belongsTo(User,{foreignKey:'role_id'})
+
+export default Role;

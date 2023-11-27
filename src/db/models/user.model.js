@@ -1,10 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from "./../index.db.js"
-import { Book } from "./book.model.js"
-import { Role } from './role.model.js';
-import { Loan } from './loan.model.js';
 
-export const User = sequelize.define("users", {
+const User = sequelize.define("users", {
     firstname: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -34,11 +31,6 @@ export const User = sequelize.define("users", {
           unique: true,
           field: 'membership_number'
       },
-    //   deleted:{
-    //       type:DataTypes.BOOLEAN,
-    //       allowNull:false,
-    //       default:false
-    //   },
       isActive:{
           type:DataTypes.BOOLEAN,
           allowNull: false,
@@ -51,13 +43,7 @@ export const User = sequelize.define("users", {
     }
 );
 
-Role.hasMany(User,{foreignKey: {name: 'roleId',field: 'role_id'} })
-
-User.belongsTo(Role,{foreign_key: {name: 'roleId',field: 'role_id'} })
-
-User.belongsToMany(Book, {through: Loan})
-
-Book.belongsToMany(User, {through: Loan})
+export default User;
 
 
 // To create a One-To-One relationship, the hasOne and belongsTo associations are used together;
