@@ -34,5 +34,3 @@ const Author = sequelize.define(
 
 export default Author;
 
-//relacion entre many to many entre tabla book y author
-//Author.belongsToMany(Profile, { through: 'Book_Author' });
