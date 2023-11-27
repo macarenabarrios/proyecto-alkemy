@@ -14,6 +14,6 @@ User.belongsToMany(Book, {through: Loan,foreignKey: {name:"userId",field:'user_i
 
 Book.belongsToMany(User, {through: Loan,foreignKey: {name:"bookId",field:'book_id'}})
 
-Author.belongsToMany(Book, { through: 'Book_Author' });
+Author.belongsToMany(Book, { through: 'Book_Author', timestamps: false });
 
-Book.belongsToMany(Author, { through: 'Book_Author' });
+Book.belongsToMany(Author, { through: 'Book_Author', timestamps: false });
