@@ -1,5 +1,5 @@
-import express from "express";
-import dotenv from "dotenv";
+import express from 'express';
+import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import indexRouter from './src/routes/index.route.js'
@@ -15,13 +15,13 @@ import "./src/db/models/user.model.js"
 import "./src/db/models/book.model.js"
 import "./src/db/models/role.model.js"
 import "./src/db/models/loan.model.js"
+import "./src/db/models/publisher.model.js"
 import "./src/db/associations.db.js"
 
 //Conexion y generacion de la base de datos
 const main = async () => {
   try {
-    
-    await sequelize.sync();
+    await sequelize.sync({});
     seed()
     console.log('Connection has been established successfully.');
   } catch (error) {
@@ -44,9 +44,8 @@ app.use(cors());
 app.use('/api', indexRouter);
 
 console.log(process.env.DB_NAME);
-console.log(process.env.DB_USERNAME);
-console.log(process.env.DB_PASSWORD);
+console.log(process.env.DB_USER);
+console.log(process.env.DB_PASS);
 console.log(process.env.DB_HOST);
-
 
 export default app;
