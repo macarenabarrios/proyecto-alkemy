@@ -1,26 +1,40 @@
+import { roleRepository } from '../repositories/role.repository.js';
 import {userRepository} from '../repositories/user.repository.js'
-
+import {hashPassword} from '../utils/hash.util.js'
 
 const getAll = async () =>{
     const response = await userRepository.findAll();
     return response;
 }
 const getById = async (id) =>{
-    const movie = await userRepository.findById(id)
-    if(!movie){
-        throw new Error(`Movie doesn't exist with id ${id}`)
+    const user = await userRepository.findById(id)
+    if(!user){
+        throw new Error(`User doesn't exist with id ${id}`)
     }
-    return movie ;
+    return user ;
 }
-const create = async (movie) =>{
-
-    await userRepository.save(movie);
+const create = async (user) =>{
+    try {
+        const defaultRole = await roleRepository.findByName("USER");
+        user.roleId = defaultRole.id;
+        user.password = await hashPassword(user.password);
+        const newUser = await userRepository.save(user);
+        console.log(newUser)        
+    } catch (error) {
+        console.error(error);   
+    }
 
 }
-const update = async (id,movie) =>{
-    await userRepository.update(id,movie);
+const update = async (id,user) =>{
+    await userRepository.update(id,user);
 }
 const deleteUser = async (id) =>{
-    //todo
+    await userRepository.deleteById(id);
+    
 }
-export const userService = {getAll,getById,create,update,deleteUser}
+
+const findByEmail = async (email) => {
+    const response = await userRepository.findByEmail(email);
+    return response;
+}
+export const userService = {getAll,getById,create,update,deleteUser,findByEmail}
