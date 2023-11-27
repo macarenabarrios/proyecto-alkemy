@@ -1,5 +1,5 @@
 import { sequelize } from "./index.db.js";
-import { Role } from "./models/role.model.js";
+import  Role  from "./models/role.model.js";
 
 const roles =
   [
