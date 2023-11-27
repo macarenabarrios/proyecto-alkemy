@@ -3,6 +3,7 @@ import User from "./models/user.model.js"
 import Book from "./models/book.model.js"
 import Loan from "./models/loan.model.js"
 import Publisher from "./models/publisher.model.js"
+import Author from "./models/author.model.js"
 
 Role.hasMany(User, { foreignKey: { name: "roleId", field: 'role_id' } });
 
@@ -15,3 +16,7 @@ Book.belongsToMany(User, { through: Loan, foreignKey: { name: "bookId", field: '
 Publisher.hasMany(Book, { foreignKey: { name: "publisherId", field: "publisher_id" } });
 
 Book.belongsTo(Publisher, { foreignKey: { name: "publisherId", field: "publisher_id" } });
+
+Author.belongsToMany(Book, { through: 'Book_Author', timestamps: false });
+
+Book.belongsToMany(Author, { through: 'Book_Author', timestamps: false });
