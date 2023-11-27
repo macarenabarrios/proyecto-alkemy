@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../index.db.js";
 
-export const Author = sequelize.define(
+const Author = sequelize.define(
   "authors",
   {
     id: {
@@ -24,13 +24,15 @@ export const Author = sequelize.define(
     },
     nationality: {
       type: DataTypes.STRING,
-      autoIncrement: true,
+      allowNull: false,
     },
   },
   {
     timestamps: true,
   }
 );
+
+export default Author;
 
 //relacion entre many to many entre tabla book y author
 //Author.belongsToMany(Profile, { through: 'Book_Author' });
