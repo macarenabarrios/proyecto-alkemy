@@ -20,7 +20,7 @@ const findAll = async () => {
           attributes: ['id', 'email', 'membership_number']
         }
       ],
-      attributes: ['startDate', 'dueDate']
+      attributes: ['id', 'startDate', 'dueDate']
     });
 
 
@@ -43,7 +43,7 @@ const findById = async (id) => {
         attributes: ['id', 'email', 'membership_number']
       }
     ],
-    attributes: ['startDate', 'dueDate'],
+    attributes: ['id', 'startDate', 'dueDate'],
     where: {
       id: id
     }
@@ -51,4 +51,20 @@ const findById = async (id) => {
   return response;
 };
 
-export const loanRepository = { save, findAll, findById };
+const update = async (id, loan) => {
+  await Loan.update(loan, {
+    where: {
+      id: id,
+    },
+  });
+};
+
+const deleteById = async (id) => {
+  await Loan.destroy({
+    where: {
+      id: id,
+    },
+  });
+};
+
+export const loanRepository = { save, findAll, findById, update, deleteById };

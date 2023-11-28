@@ -3,8 +3,10 @@ import { save, update, getAll, getById, deleteLoan } from '../controllers/loan.c
 
 const router = Router();
 
-router.post('', save);
 router.get('', getAll);
 router.get('/:id', getById);
+router.post('', save);
+router.put('/:id', update);
+router.delete('/:id', deleteLoan);
 
 export default router;

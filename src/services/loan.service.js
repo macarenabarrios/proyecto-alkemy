@@ -16,6 +16,11 @@ const getById = async (id) => {
 }
 
 const create = async (loan) => {
+    let response = {
+        data: null,
+        error: null
+    }
+
     try {
         let data = null;
 
@@ -29,7 +34,17 @@ const create = async (loan) => {
             const user = await userRepository.findByEmail(data.email);
             const book = await Book.findOne({ where: { isbn: data.isbn } });
 
-            if (book.stock > 0) {
+            if (!book) {
+                response.error = 'Libro no encontrado.';
+                return response;
+            }
+
+            if (!user) {
+                response.error = 'Usuario no encontrado.';
+                return response;
+            }
+
+            if (book?.stock > 0) {
 
                 await Book.update({ stock: book.stock - 1 }, { where: { isbn: data.isbn } })
 
@@ -38,26 +53,38 @@ const create = async (loan) => {
                     data.bookId = book.id;
 
                     const newLoan = await loanRepository.save(data);
-                    return newLoan;
+
+                    response.data = newLoan;
+
+                    return response;
 
                 } else {
-                    return "Usuario o libro no encontrado."
+                    response.error = 'Usuario o libro no encontrado.';
+                    return response;
                 }
             }
             else {
-                return `No hay más stock del libro ${book?.title} con ISBN #${book?.isbn}.`
+                response.error = `No hay más stock del libro ${book?.title} con ISBN #${book?.isbn}.`;
+                return response;
             }
 
         } else {
-            return "Faltan datos necesarios para crear un préstamo."
+            response.error = `Faltan datos necesarios para crear un préstamo.`;
+            return response;
         }
 
     } catch (error) {
-
-        console.error(error);
-
+        response.error = error;
+        return response;
     }
 };
 
+const update = async (id, loan) => {
+    await loanRepository.update(id, loan);
+}
 
-export const loanService = { create, getAll, getById }
+const deleteLoan = async (id) => {
+    await loanRepository.deleteById(id);
+}
+
+export const loanService = { create, getAll, getById, update, deleteLoan }
