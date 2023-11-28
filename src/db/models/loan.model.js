@@ -3,10 +3,10 @@ import { DataTypes } from "sequelize";
 
 const Loan = sequelize.define("loans", {
     id: {
-        type: DataTypes.UUID,
+        type: DataTypes.BIGINT,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4,
         allowNull: false,
+        autoIncrement: true,
     },
     startDate: {
         type: DataTypes.DATE,
