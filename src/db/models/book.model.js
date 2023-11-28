@@ -1,13 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from "../index.db.js"
 
-const Book = sequelize.define("Books", {
-    id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
-    },
+const Book = sequelize.define("books", {
     title: {
         type: DataTypes.STRING,
         allowNull: false

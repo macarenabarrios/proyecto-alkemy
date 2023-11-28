@@ -9,10 +9,6 @@ Role.hasMany(User, { foreignKey: { name: "roleId", field: 'role_id' } });
 
 User.belongsTo(Role, { foreignKey: { name: "roleId", field: 'role_id' } });
 
-User.belongsToMany(Book, { through: Loan, foreignKey: { name: "userId", field: 'user_id' } });
-
-Book.belongsToMany(User, { through: Loan, foreignKey: { name: "bookId", field: 'book_id' } });
-
 Publisher.hasMany(Book, { foreignKey: { name: "publisherId", field: "publisher_id" } });
 
 Book.belongsTo(Publisher, { foreignKey: { name: "publisherId", field: "publisher_id" } });
@@ -20,3 +16,9 @@ Book.belongsTo(Publisher, { foreignKey: { name: "publisherId", field: "publisher
 Author.belongsToMany(Book, { through: 'Book_Author', timestamps: false });
 
 Book.belongsToMany(Author, { through: 'Book_Author', timestamps: false });
+
+
+User.hasMany(Loan, { foreignKey: { name: "userId", field: 'user_id' } })
+Loan.belongsTo(User, { foreignKey: { name: "userId", field: 'user_id' } })
+Book.hasMany(Loan, { foreignKey: { name: "bookId", field: 'book_id' } })
+Loan.belongsTo(Book, { foreignKey: { name: "bookId", field: 'book_id' } })
