@@ -1,4 +1,4 @@
-import { Publisher } from '../db/models/publisher.model.js';
+import Publisher from '../db/models/publisher.model.js';
 import { Op } from 'sequelize';
 
 const deletePublisher = async (id) => {
