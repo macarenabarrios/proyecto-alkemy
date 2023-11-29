@@ -19,7 +19,7 @@ const getAll = async () => {
 const getById = async (id) => {
 	const publisher = await publisherRepository.getById(id);
 	if (!publisher) {
-		throw new Error(`Publusher with id ${id} not found`)
+		throw new Error(`Publisher with id ${id} not found`)
 	}
 	return publisher;
 };
@@ -34,7 +34,7 @@ const newPublisher = async (publisher) => {
 };
 
 const update = async (id, publisher) => {
-	let updatedPublisher = await publisherRepository.getById(id); // Cambiado de const a let
+	let updatedPublisher = await publisherRepository.getById(id);
 	if (!updatedPublisher) {
 		throw new Error(`Publisher with id ${id} not found`);
 	} else {
