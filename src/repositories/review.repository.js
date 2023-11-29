@@ -1,4 +1,6 @@
 import Review from '../db/models/review.model.js';
+import User from '../db/models/user.model.js';
+import Book from '../db/models/book.model.js';
 import { Op } from 'sequelize';
 
 const deleteReview = async (id) => {
