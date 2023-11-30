@@ -50,7 +50,7 @@ const getById = async (req, res, next) => {
             }
         );
 
-        next(err)
+        next(error)
     }
 
 }
@@ -66,7 +66,8 @@ const save = async (req, res, next) => {
                 {
                     success: true,
                     message: 'Se creo el prestamo satisfactoriamente.',
-                    data: response.data
+                    data: response.data,
+                    availableLoans: response?.availableLoans
                 }
             )
         }
@@ -121,4 +122,15 @@ const deleteLoan = (req, res, next) => {
         })
 }
 
-export { getAll, getById, save, update, deleteLoan }
+const deleteAllLoans = (req, res, next) => {
+    loanService.deleteAllLoans(req.params.idUser)
+        .then(() => {
+            res.status(200).json()
+        })
+        .catch((err) => {
+            next(err)
+        })
+}
+
+
+export { getAll, getById, save, update, deleteLoan, deleteAllLoans }
