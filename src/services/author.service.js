@@ -9,7 +9,7 @@ const getById = async (id) => {
     }
     return response;
   } catch (error) {
-    throw { status: 500, message: 'Error interno del servidor' };
+    throw  error ;
   }
 };
 

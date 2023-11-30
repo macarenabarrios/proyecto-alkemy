@@ -1,3 +1,4 @@
+import { log } from "console";
 import { authorService } from "../services/author.service.js";
 
 const findById = (req, res) => {
@@ -6,12 +7,10 @@ const findById = (req, res) => {
   authorService
     .getById(id)
     .then((result) => {
-			if (!result) {
-        return res.status(404).json({ error: 'Autor no encontrado' });
-      }
       res.status(200).json(result);
     })
     .catch((error) => {
+      console.log(error);
       res.status(error.status || 500).json({ error: error.message });
     });
 };
