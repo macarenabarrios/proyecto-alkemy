@@ -67,4 +67,30 @@ const deleteById = async (id) => {
   });
 };
 
-export const loanRepository = { save, findAll, findById, update, deleteById };
+const deleteAllByUserId = async (id) => {
+  await Loan.destroy({
+    where: {
+      userId: id
+    }
+  })
+};
+
+const countLoansByUserId = async (id) => {
+  try {
+    const loanCount = await Loan.count({
+      where: {
+        userId: id
+      }
+    });
+
+    console.log(`Número de préstamos para el usuario con ID ${id}: ${loanCount}`);
+    return loanCount;
+  } catch (error) {
+    console.error('Error al contar préstamos:', error);
+    throw error; // Puedes manejar el error según tus necesidades
+  }
+};
+
+
+
+export const loanRepository = { save, findAll, findById, update, deleteById, countLoansByUserId, deleteAllByUserId };
