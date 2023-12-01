@@ -21,7 +21,7 @@ const create = async (user) => {
     user.roleId = defaultRole.id;
     user.password = await hashPassword(user.password);
     const newUser = await userRepository.save(user);
-    console.log(newUser)
+    return newUser;
   } catch (error) {
     console.error(error);
   }

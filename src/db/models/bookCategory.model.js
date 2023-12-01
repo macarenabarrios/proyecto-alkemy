@@ -1,20 +1,16 @@
 import { sequelize } from "../index.db.js";
 import { DataTypes } from "sequelize";
 
-const Category = sequelize.define("categories", {
+const BookCategory = sequelize.define("Book_Category", {
     id: {
         type: DataTypes.BIGINT,
         primaryKey: true,
         allowNull: false,
         autoIncrement: true,
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false
     }
 },
 {
     timestamps: false
 }) 
 
-export default Category;
+export default BookCategory;

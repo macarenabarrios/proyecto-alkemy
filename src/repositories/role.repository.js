@@ -10,5 +10,13 @@ const findByName = async (name) =>{
     return response;
 }
 
+const findById = async (id) =>{
+    const response = await Role.findOne({
+        where:{
+            id:id
+        },
+    });
+    return response;
+}
 
-export const roleRepository = {findByName}
+export const roleRepository = {findByName,findById}
