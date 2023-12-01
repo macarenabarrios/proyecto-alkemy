@@ -2,48 +2,49 @@ import { DataTypes } from 'sequelize';
 import { sequelize } from "./../index.db.js"
 
 const User = sequelize.define("users", {
-    firstname: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      lastname: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        validate:{
-          isEmail: true,
-        }
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          len: [6, 64]
-        }
-      },
-      membershipNumber:{
-          type: DataTypes.STRING,
-          allowNull: false,
-          unique: true,
-          field: 'membership_number'
-      },
-      isActive:{
-          type:DataTypes.BOOLEAN,
-          allowNull: false,
-          default: false,
-          field:'is_active'
-      },
-    },
-    {
-      paranoid:true
+  firstname: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  lastname: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    validate: {
+      isEmail: true,
     }
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      len: [6, 64]
+    }
+  },
+  membershipNumber: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    field: 'membership_number'
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    default: false,
+    field: 'is_active'
+  },
+},
+  {
+    paranoid: true
+  }
 );
 
 export default User;
+
 
 
 // To create a One-To-One relationship, the hasOne and belongsTo associations are used together;

@@ -1,4 +1,4 @@
-import { Publisher } from '../db/models/publisher.model.js';
+import Publisher from '../db/models/publisher.model.js';
 import { Op } from 'sequelize';
 
 const deletePublisher = async (id) => {
@@ -15,10 +15,9 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-  const publisher = await Publisher.findByPk(id,
-    {
-      where: { isActive: true }
-    });
+  const publisher = await Publisher.findByPk(id, {
+    where: { isActive: true }
+  });
   return publisher;
 };
 

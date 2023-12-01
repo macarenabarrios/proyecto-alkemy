@@ -23,6 +23,7 @@ const findAll = async () => {
     console.error("Error detallado:", error);
   }
 };
+
 const findById = async (id) => {
   const response = await User.findOne({
     attributes: {
