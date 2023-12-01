@@ -9,7 +9,7 @@ export const authenticate = async (email, password) => {
         const validPassword = await comparePassword(password, user.password);
         if(!validPassword) throw new Error("Bad credentials");
         if (!user.isActive) throw new Error("Confirm your account");
-        const token = jwt.sign({username:user.email,role:user.role.name}, process.env.SECRET_KEY, { expiresIn: "24h" });
+        const token = jwt.sign({username:user.email,role:user.role.name,id:user.id}, process.env.SECRET_KEY, { expiresIn: "24h" });
         return token;
     } catch (error) {
         throw error
