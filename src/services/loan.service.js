@@ -18,7 +18,8 @@ const getById = async (id) => {
 const create = async (loan) => {
     let response = {
         data: null,
-        error: null
+        error: null,
+        availableLoans: null
     }
 
     try {
@@ -44,6 +45,13 @@ const create = async (loan) => {
                 return response;
             }
 
+            const countLoans = await loanRepository.countLoansByUserId(user?.id);
+
+            if (countLoans >= 3) {
+                response.error = 'Limite de prestamos alcanzado.';
+                return response;
+            }
+
             if (book?.stock > 0) {
 
                 await Book.update({ stock: book.stock - 1 }, { where: { isbn: data.isbn } })
@@ -54,6 +62,7 @@ const create = async (loan) => {
 
                     const newLoan = await loanRepository.save(data);
 
+                    response.availableLoans = 3 - countLoans;
                     response.data = newLoan;
 
                     return response;
@@ -87,4 +96,8 @@ const deleteLoan = async (id) => {
     await loanRepository.deleteById(id);
 }
 
-export const loanService = { create, getAll, getById, update, deleteLoan }
+const deleteAllLoans = async (id) => {
+    await loanRepository.deleteAllByUserId(id);
+}
+
+export const loanService = { create, getAll, getById, update, deleteLoan, deleteAllLoans }

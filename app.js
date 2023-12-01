@@ -22,7 +22,7 @@ import './src/db/associations.db.js';
 //Conexion y generacion de la base de datos
 const main = async () => {
   try {
-    await sequelize.sync();
+    await sequelize.sync({alter:true});
     seed()
     console.log('Connection has been established successfully.');
   } catch (error) {
