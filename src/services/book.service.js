@@ -4,9 +4,8 @@ const deleteBook = async (id) => {
 	let book = await bookRepository.getById(id);
 	if (!book) {
 		throw new Error(`Book with id ${id} not found`)
-	} else {
-		book = await bookRepository.deleteBook(id);
 	}
+	book = await bookRepository.deleteBook(id);
 	return book;
 };
 
@@ -36,9 +35,8 @@ const update = async (id, book) => {
 	let updatedBook = await bookRepository.getById(id);
 	if (!updatedBook) {
 		throw new Error(`Book with id ${id} not found`);
-	} else {
-		updatedBook = await bookRepository.update(id, book);
 	}
+	updatedBook = await bookRepository.update(id, book);
 	return updatedBook;
 };
 
