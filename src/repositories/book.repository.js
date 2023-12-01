@@ -3,7 +3,7 @@ import Book from '../db/models/book.model.js'
 
 const deleteBook = async (id) => {
 	await Book.destroy({
-		where: { id: id }
+		where: { id }
 	});
 };
 
@@ -39,10 +39,10 @@ const newBook = async (book) => {
 
 const update = async (id, book) => {
 	const [updatedRowCount] = await Book.update(book, {
-		where: { id: id }
+		where: { id }
 	});
 	if (updatedRowCount === 0) {
-		return null; // Devuelve null si no se actualizó ninguna fila
+		return null;
 	}
 	const updatedBook = await Book.findByPk(id);
 	return updatedBook;

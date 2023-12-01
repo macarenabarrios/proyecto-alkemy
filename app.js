@@ -8,7 +8,7 @@ import seed from './src/db/seed.db.js';
 dotenv.config();
 
 //Instancia de Sequelize
-import { sequelize } from './src/db/index.db.js'
+import { sequelize } from './src/db/index.db.js';
 
 //Modelos de sequelize -> Importarte importarlos para generar las tablas
 import './src/db/models/user.model.js';
@@ -16,6 +16,7 @@ import './src/db/models/book.model.js';
 import './src/db/models/role.model.js';
 import './src/db/models/loan.model.js';
 import './src/db/models/publisher.model.js';
+import './src/db/models/review.model.js';
 import './src/db/associations.db.js';
 
 //Conexion y generacion de la base de datos

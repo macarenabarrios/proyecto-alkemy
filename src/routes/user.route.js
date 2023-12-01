@@ -4,7 +4,6 @@ import { hasAnyRole } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
-
 router.get('', getAll);
 router.get('/:id', hasAnyRole(["ADMIN", "USER"]), getById);
 router.post('', save);

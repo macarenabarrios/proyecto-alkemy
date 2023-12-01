@@ -28,9 +28,8 @@ const Author = sequelize.define(
     },
   },
   {
-    timestamps: true,
+    timestamps: false,
   }
 );
 
 export default Author;
-
