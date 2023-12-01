@@ -37,7 +37,17 @@ const getAllAuthors = async (page = 1, pageSize = 10, filterByName = null) => {
   }
 };
 
+const createAuthor = async (authorData) => {
+  try {
+    const newAuthor = await authorRepository.createAuthor(authorData);
+    return newAuthor;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const authorService = {
   getById,
+  createAuthor,
   getAllAuthors,
 };

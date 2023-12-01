@@ -1,5 +1,5 @@
-import { log } from "console";
 import { authorService } from "../services/author.service.js";
+
 
 const findById = (req, res) => {
   const id = req.params.id;
@@ -13,6 +13,18 @@ const findById = (req, res) => {
       console.log(error);
       res.status(error.status || 500).json({ error: error.message });
     });
+};
+
+const createAuthor = async (req, res) => {
+  
+  const authorData = req.body;
+
+  try {
+    const newAuthor = await authorService.createAuthor(authorData);
+    res.status(201).json(newAuthor);
+     } catch (error) {
+    res.status(error.status || 500).json({ error: error.message });
+  }
 };
 
 const getAllAuthors = async (req, res) => {
@@ -41,5 +53,6 @@ const getAllAuthors = async (req, res) => {
 
 export const authorController = {
   findById,
+  createAuthor,
   getAllAuthors,
 };
