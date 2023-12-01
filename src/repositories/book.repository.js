@@ -42,7 +42,7 @@ const update = async (id, book) => {
 		where: { id: id }
 	});
 	if (updatedRowCount === 0) {
-		return null; // Devuelve null si no se actualizó ninguna fila
+		return null;
 	}
 	const updatedBook = await Book.findByPk(id);
 	return updatedBook;
