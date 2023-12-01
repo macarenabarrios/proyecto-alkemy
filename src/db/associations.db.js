@@ -7,6 +7,7 @@ import Publisher from './models/publisher.model.js';
 import Author from './models/author.model.js';
 import Review from './models/review.model.js';
 import Category from './models/category.model.js';
+import BookCategory from './models/bookCategory.model.js';
 
 // Un usuario tiene un rol; un rol tiene mas de un usuario
 Role.hasMany(User, { foreignKey: { name: "roleId", field: 'role_id' } });
@@ -40,6 +41,8 @@ Loan.belongsTo(User, { foreignKey: { name: "userId", field: 'user_id' } });
 Book.hasMany(Loan, { foreignKey: { name: "bookId", field: 'book_id' } });
 Loan.belongsTo(Book, { foreignKey: { name: "bookId", field: 'book_id' } });
 
-// Un libro tiene muchas categorias; una categoria tiene muchos libros
-Book.belongsToMany(Category, { through: 'Book_Category', timestamps: false });
-Category.belongsToMany(Book, { through: 'Book_Category', timestamps: false });
+Category.hasMany(BookCategory, { foreignKey: { name: "categoryId", field: 'category_id' } });
+BookCategory.belongsTo(Category, { foreignKey: { name: "categoryId", field: 'category_id' } });
+
+Book.hasMany(BookCategory, { foreignKey: { name: "bookId", field: 'book_id' } });
+BookCategory.belongsTo(Book, { foreignKey: { name: "bookId", field: 'book_id' } });
