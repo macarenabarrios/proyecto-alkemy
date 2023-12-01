@@ -6,6 +6,7 @@ import publisherRouter from './publisher.route.js';
 import authorRouter from './author.route.js';
 import bookRouter from './book.route.js';
 import reviewRouter from './review.route.js';
+import categoryRouter from './category.routes.js'
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.use('/publisher', publisherRouter);
 router.use('/review', reviewRouter);
 router.use('/author', authorRouter);
 router.use('/book', bookRouter);
+router.use('/categories', categoryRouter)
 
 export default router;
