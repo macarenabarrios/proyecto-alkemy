@@ -13,6 +13,16 @@ const getById = async (id) => {
   }
 };
 
+const createAuthor = async (authorData) => {
+  try {
+    const newAuthor = await authorRepository.createAuthor(authorData);
+    return newAuthor;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const authorService = {
   getById,
+  createAuthor
 };
