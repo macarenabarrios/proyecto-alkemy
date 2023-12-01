@@ -4,6 +4,8 @@ import Book from './models/book.model.js';
 import Loan from './models/loan.model.js';
 import Publisher from './models/publisher.model.js';
 import Author from './models/author.model.js';
+import Category from './models/category.model.js';
+import BookCategory from './models/bookCategory.model.js';
 
 Role.hasMany(User, { foreignKey: { name: "roleId", field: 'role_id' } });
 User.belongsTo(Role, { foreignKey: { name: "roleId", field: 'role_id' } });
@@ -19,3 +21,9 @@ Loan.belongsTo(User, { foreignKey: { name: "userId", field: 'user_id' } });
 
 Book.hasMany(Loan, { foreignKey: { name: "bookId", field: 'book_id' } });
 Loan.belongsTo(Book, { foreignKey: { name: "bookId", field: 'book_id' } });
+
+Category.hasMany(BookCategory, { foreignKey: { name: "categoryId", field: 'category_id' } });
+BookCategory.belongsTo(Category, { foreignKey: { name: "categoryId", field: 'category_id' } });
+
+Book.hasMany(BookCategory, { foreignKey: { name: "bookId", field: 'book_id' } });
+BookCategory.belongsTo(Book, { foreignKey: { name: "bookId", field: 'book_id' } });
