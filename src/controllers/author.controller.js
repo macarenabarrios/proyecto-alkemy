@@ -22,7 +22,7 @@ const createAuthor = async (req, res) => {
   try {
     const newAuthor = await authorService.createAuthor(authorData);
     res.status(201).json(newAuthor);
-  } catch (error) {
+     } catch (error) {
     res.status(error.status || 500).json({ error: error.message });
   }
 };
