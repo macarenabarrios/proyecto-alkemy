@@ -15,6 +15,31 @@ const findById = (req, res) => {
     });
 };
 
+const getAllAuthors = async (req, res) => {
+  const { page, pageSize, filterByName } = req.query;
+  try {
+    if (
+      filterByName !== undefined &&
+      filterByName !== null &&
+      typeof filterByName !== "string"
+    ) {
+      throw {
+        status: 400,
+        message: "El parámetro filterByName debe ser una cadena de texto.",
+      };
+    }
+    const authors = await authorService.getAllAuthors(
+      page,
+      pageSize,
+      filterByName
+    );
+    res.status(200).json(authors);
+  } catch (error) {
+    res.status(error.status || 500).json({ error: error.message });
+  }
+};
+
 export const authorController = {
   findById,
+  getAllAuthors,
 };
