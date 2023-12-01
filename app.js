@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import indexRouter from './src/routes/index.route.js';
+import indexRouter from './src/routes/index.route.js'
 import seed from './src/db/seed.db.js';
 
 dotenv.config();

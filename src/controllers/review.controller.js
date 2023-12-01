@@ -7,19 +7,19 @@ const deleteReview = (req, res, next) => {
 		})
 		.catch((err) => {
 			console.log(err);
-			res.status(404).json({ error: err.message }); // Cambiado a 404 Not Found
+			res.status(404).json({ error: err.message });
 			next(err);
 		});
 };
 
-const getAll = (req, res, next) => {
-	reviewService.getAll()
+const getAllReviews = (req, res, next) => {
+	reviewService.getAllReviews(req.query["page"], req.query["size"])
 		.then((response) => {
-			res.status(200).json(response)
+			res.status(200).json(response);
 		})
 		.catch((err) => {
 			console.log(err);
-			next(err)
+			next(err);
 		});
 };
 
@@ -29,34 +29,27 @@ const getById = (req, res, next) => {
 			res.status(200).json(response)
 		})
 		.catch((err) => {
-			console.log(err);
 			res.status(500).json({ error: err.message });
 			next(err)
 		});
 };
 
-const getByBook = (req, res, next) => {
-	reviewService.getByBook(req.params.bookId)
-		.then((response) => {
-			res.status(200).json(response)
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).json({ error: err.message });
-			next(err)
-		});
+const getByBook = async (req, res, next) => {
+	try {
+		const response = await reviewService.getByBook(req.params.id);
+		res.status(200).json(response);
+	} catch (error) {
+		next(error);
+	}
 };
 
-const getByUser = (req, res, next) => {
-	reviewService.getByUser(req.params.userId)
-		.then((response) => {
-			res.status(200).json(response)
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(500).json({ error: err.message });
-			next(err)
-		});
+const getByUser = async (req, res, next) => {
+	try {
+		const response = await reviewService.getByUser(req.params.id);
+		res.status(200).json(response);
+	} catch (error) {
+		next(error);
+	}
 };
 
 const getDeletedReviews = (req, res, next) => {
@@ -73,7 +66,7 @@ const getDeletedReviews = (req, res, next) => {
 const newReview = (req, res, next) => {
 	reviewService.newReview(req.body)
 		.then((response) => {
-			res.status(201).json(response)
+			res.status(201).json({ message: 'Review created successfully', review: response })
 		})
 		.catch((err) => {
 			next(err);
@@ -83,7 +76,7 @@ const newReview = (req, res, next) => {
 const update = (req, res, next) => {
 	reviewService.update(req.params.id, req.body)
 		.then((response) => {
-			res.status(201).json(response);
+			res.status(201).json({ message: 'Review created successfully', review: response });
 		})
 		.catch((err) => {
 			next(err);
@@ -92,7 +85,7 @@ const update = (req, res, next) => {
 
 export const reviewController = {
 	deleteReview,
-	getAll,
+	getAllReviews,
 	getById,
 	getByBook,
 	getByUser,

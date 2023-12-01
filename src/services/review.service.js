@@ -1,6 +1,4 @@
 import { reviewRepository } from '../repositories/review.repository.js';
-//import { } from '../repositories/book.repository.js';
-import { userRepository } from '../repositories/user.repository.js';
 
 const deleteReview = async (id) => {
 	let review = await reviewRepository.getById(id);
@@ -11,8 +9,8 @@ const deleteReview = async (id) => {
 	return review;
 };
 
-const getAll = async () => {
-	const reviews = await reviewRepository.getAll();
+const getAllReviews = async (page, size) => {
+	const reviews = await reviewRepository.getAllReviews(page, size);
 	return reviews;
 };
 
@@ -25,21 +23,27 @@ const getById = async (id) => {
 };
 
 const getByBook = async (bookId) => {
-	/* 	const book = await bookRepository.findById(bookId);
-		if (!book) {
-			throw new Error(`Book with id ${id} not found`)
+	try {
+		const reviews = await reviewRepository.getByBook(bookId);
+		if (!reviews || reviews.length === 0) {
+			throw new Error(`No reviews found for book with ID ${bookId}`);
 		}
-		let reviews = await reviewRepository.getByBook(bookId);
-		return reviews; */
+		return reviews;
+	} catch (error) {
+		throw new Error(`Error getting reviews: ${error.message}`);
+	}
 };
 
 const getByUser = async (userId) => {
-	const user = await userRepository.findById(userId);
-	if (!user) {
-		throw new Error(`User with id ${id} not found`)
-	}
 	let reviews = await reviewRepository.getByUser(userId);
-	return reviews;
+	try {
+		if (!reviews || reviews.length === 0) {
+			throw new Error(`No reviews found for user with ID ${userId}`);
+		}
+		return reviews;
+	} catch (error) {
+		throw new Error(`Error getting reviews: ${error.message}`);
+	}
 };
 
 const getDeletedReviews = async () => {
@@ -48,15 +52,12 @@ const getDeletedReviews = async () => {
 };
 
 const newReview = async (review) => {
-	/* 	const book = await bookRepository.findById(review.book_id);
-		if (!book) {
-			throw new Error(`Book with id ${review.book_id} not found`)
-		} */
-	const user = await userRepository.findById(review.user_id);
-	if (!user) {
-		throw new Error(`User with id ${review.user_id} not found`)
+	try {
+		const createdReview = await reviewRepository.newReview(review);
+		return createdReview;
+	} catch (error) {
+		throw new Error(`Error creating review: ${error.message}`);
 	}
-	await reviewRepository.newReview(review);
 };
 
 const update = async (id, review) => {
@@ -70,7 +71,7 @@ const update = async (id, review) => {
 
 export const reviewService = {
 	deleteReview,
-	getAll,
+	getAllReviews,
 	getById,
 	getByBook,
 	getByUser,

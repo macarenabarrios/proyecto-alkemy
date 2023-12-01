@@ -9,38 +9,50 @@ const deleteReview = async (id) => {
 	});
 };
 
-const getAll = async () => {
+const getAllReviews = async (page = 0, size = 10) => {
+	page = parseInt(page);
+	size = parseInt(size);
+	const offset = page === 0 ? page : page * size;
+	const limit = parseInt(size);
+	console.log("OFFSET TYPE:", typeof (offset));
+	console.log("LIMIT TYPE:", typeof (limit));
 	const reviews = await Review.findAll({
-		where: { isActive: true }
+		offset: offset,
+		limit: limit,
+		order: [['id', 'ASC']],
 	});
 	return reviews;
 };
 
 const getById = async (id) => {
-	const review = await Review.findByPk(id, {
-		where: { isActive: true }
-	});
+	const review = await Review.findByPk(id);
 	return review;
 };
 
 const getByBook = async (bookId) => {
-	const reviews = await Review.findAll({
-		where: {
-			bookId,
-			isActive: true
-		},
-	})
-	return reviews;
+	try {
+		const reviews = await Review.findAll({
+			where: {
+				bookId: bookId,
+			},
+		});
+		return reviews;
+	} catch (error) {
+		throw new Error(`Error getting reviews by bookId: ${error.message}`);
+	}
 };
 
 const getByUser = async (userId) => {
-	const reviews = await Review.findAll({
-		where: {
-			userId,
-			isActive: true
-		},
-	})
-	return reviews;
+	try {
+		const reviews = await Review.findAll({
+			where: {
+				userId: userId,
+			},
+		})
+		return reviews;
+	} catch (error) {
+		throw new Error(`Error getting reviews by userId: ${error.message}`);
+	}
 };
 
 const getDeletedReviews = async () => {
@@ -56,7 +68,24 @@ const getDeletedReviews = async () => {
 };
 
 const newReview = async (review) => {
-	await Review.create(review);
+	try {
+		const [book, user] = await Promise.all([
+			Book.findByPk(review.bookId, { where: { isActive: true } }),
+			User.findByPk(review.userId, { where: { isActive: true } })
+		]);
+		if (!book) {
+			throw new Error(`Book with id ${review.bookId} not found`);
+		}
+		if (!user) {
+			throw new Error(`User with id ${review.userId} not found`);
+		}
+		review.bookId = book.id;
+		review.userId = user.id;
+		const createdReview = await Review.create(review);
+		return createdReview;
+	} catch (error) {
+		throw new Error(`Error creating review: ${error.message}`);
+	}
 };
 
 const update = async (id, review) => {
@@ -64,7 +93,7 @@ const update = async (id, review) => {
 		where: { id }
 	});
 	if (updatedRowCount === 0) {
-		return null; // Devuelve null si no se actualizó ninguna fila
+		return null;
 	}
 	const updatedReview = await Review.findByPk(id);
 	return updatedReview;
@@ -72,7 +101,7 @@ const update = async (id, review) => {
 
 export const reviewRepository = {
 	deleteReview,
-	getAll,
+	getAllReviews,
 	getById,
 	getByBook,
 	getByUser,

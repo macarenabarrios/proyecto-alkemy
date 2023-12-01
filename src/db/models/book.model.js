@@ -1,13 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from "../index.db.js"
 
-const Book = sequelize.define("Books", {
-  id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
-    allowNull: false,
-  },
+const Book = sequelize.define("books", {
   title: {
     type: DataTypes.STRING,
     allowNull: false
@@ -17,7 +11,7 @@ const Book = sequelize.define("Books", {
     allowNull: false
   },
   isbn: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BIGINT,
     allowNull: false,
     unique: true
   },
@@ -30,10 +24,16 @@ const Book = sequelize.define("Books", {
   },
   image: {
     type: DataTypes.TEXT,
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true,
   }
 },
   {
-    timestamps: true
+    timestamps: true,
+    paranoid: true
   }
 );
 

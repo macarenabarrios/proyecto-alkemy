@@ -4,7 +4,7 @@ import { reviewController } from '../controllers/review.controller.js'
 const router = Router();
 
 router.post('/create', reviewController.newReview);
-router.get('', reviewController.getAll);
+router.get('', reviewController.getAllReviews);
 router.get('/getbyid/:id', reviewController.getById);
 router.get('/getbybook/:id', reviewController.getByBook);
 router.get('/getbyuser/:id', reviewController.getByUser);
