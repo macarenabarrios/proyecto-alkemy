@@ -14,5 +14,17 @@ const login = (req,res,next)=>{
 
 }
 
+const register = (req,res,next)=>{
+    
+    const user = req.body;
+    authService.register(user)
+    .then((response)=>
+    res.status(200).json({accessToken:response})
+    ).catch((err)=>{
+        next(err)
+    }); 
 
-export {login}
+}
+
+
+export {login, register}
