@@ -84,9 +84,11 @@ const newBook = async (book) => {
 };
 
 const update = async (id, book) => {
+	console.log({"bookInRepository":book})
 	const [updatedRowCount] = await Book.update(book, {
-		where: { id }
+		where: {id:id}
 	});
+	console.log({updatedRowCount})
 	if (updatedRowCount === 0) {
 		return null;
 	}

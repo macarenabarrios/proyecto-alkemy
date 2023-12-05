@@ -119,11 +119,22 @@ const deleteAllLoans = (req, res, next) => {
     })
 };
 
+const returnBook = (req, res, next) => {
+  loanService.returnBook(req.userId, req.body.bookId )
+    .then(() => {
+      res.status(200).json()
+    })
+    .catch((err) => {
+      next(err)
+    })
+};
+
 export {
   getAll,
   getById,
   save,
   update,
   deleteLoan,
-  deleteAllLoans
+  deleteAllLoans,
+  returnBook
 };

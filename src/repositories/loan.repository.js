@@ -68,7 +68,7 @@ const deleteById = async (id) => {
 const deleteAllByUserId = async (id) => {
   await Loan.destroy({
     where: {
-      userId: id
+      user_id: id
     }
   })
 };
@@ -88,6 +88,21 @@ const countLoansByUserId = async (id) => {
   }
 };
 
+const findByUserIdAndBookId = async (userId,bookId) => {
+  const loan = await Loan.findOne({
+    where: {
+      userId:userId,
+      bookId:bookId,
+      returned:false
+    },
+    include:[{
+      model:Book,
+      as:"book"
+    }]
+  })
+  return loan;
+};
+
 export const loanRepository = {
   save,
   findAll,
@@ -95,5 +110,6 @@ export const loanRepository = {
   update,
   deleteById,
   countLoansByUserId,
-  deleteAllByUserId
+  deleteAllByUserId,
+  findByUserIdAndBookId
 };
