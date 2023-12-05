@@ -88,16 +88,16 @@ const countLoansByUserId = async (id) => {
   }
 };
 
-const findByUserIdAndBookId = async (userId,bookId) => {
+const findByUserIdAndBookId = async (userId, bookId) => {
   const loan = await Loan.findOne({
     where: {
-      userId:userId,
-      bookId:bookId,
-      returned:false
+      userId: userId,
+      bookId: bookId,
+      returned: false
     },
-    include:[{
-      model:Book,
-      as:"book"
+    include: [{
+      model: Book,
+      as: "book"
     }]
   })
   return loan;

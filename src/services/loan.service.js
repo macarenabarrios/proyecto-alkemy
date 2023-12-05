@@ -1,8 +1,8 @@
-import Book from "../db/models/book.model.js";
-import EntityNotFoundError from "../exceptions/EntityNotFoundError.js";
-import { loanRepository } from "../repositories/loan.repository.js";
-import { userRepository } from "../repositories/user.repository.js";
-import { bookService } from "./book.service.js";
+import Book from '../db/models/book.model.js';
+import EntityNotFoundError from '../exceptions/EntityNotFoundError.js';
+import { loanRepository } from '../repositories/loan.repository.js';
+import { userRepository } from '../repositories/user.repository.js';
+import { bookService } from './book.service.js';
 
 const getAll = async () => {
 	const response = await loanRepository.findAll();
@@ -110,14 +110,14 @@ const returnBook = async (userId, bookId) => {
 		}
 		const book = loanDb.book;
 
-        book.set({
-            stock: book.stock+1,
-        })
-        loanDb.set({
-            returned:true
-        })
-        book.save();
-        loanDb.save();
+		book.set({
+			stock: book.stock + 1,
+		})
+		loanDb.set({
+			returned: true
+		})
+		book.save();
+		loanDb.save();
 	} catch (error) {
 		throw error;
 	}

@@ -3,10 +3,11 @@ import { bookController } from '../controllers/book.controller.js';
 
 const router = Router();
 
-router.post('/create', bookController.newBook);
-router.delete('/delete/:id', bookController.deleteBook);
 router.get('', bookController.getAll);
-router.get('/getbyid/:id', bookController.getById);
-router.put('/update/:id', bookController.update);
+router.get('/id/:id', bookController.getById);
+router.get('/available', bookController.availableBooks);
+router.post('', bookController.newBook);
+router.put('/:id', bookController.update);
+router.delete('/:id', bookController.deleteBook);
 
 export default router;
