@@ -16,6 +16,11 @@ const Loan = sequelize.define("loans", {
   dueDate: {
     type: DataTypes.DATE,
     allowNull: false
+  },
+  returned: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+
   }
 },
   {
