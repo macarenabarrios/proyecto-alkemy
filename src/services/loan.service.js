@@ -1,11 +1,11 @@
-import Book from "../db/models/book.model.js";
-import { loanRepository } from "../repositories/loan.repository.js";
-import { userRepository } from "../repositories/user.repository.js";
+import Book from '../db/models/book.model.js';
+import { loanRepository } from '../repositories/loan.repository.js';
+import { userRepository } from '../repositories/user.repository.js';
 
 const getAll = async () => {
     const response = await loanRepository.findAll();
     return response;
-}
+};
 
 const getById = async (id) => {
     const loan = await loanRepository.findById(id)
@@ -13,7 +13,7 @@ const getById = async (id) => {
         throw new Error(`Loan doesn't exist with id ${id}`)
     }
     return loan;
-}
+};
 
 const create = async (loan) => {
     let response = {
@@ -90,14 +90,21 @@ const create = async (loan) => {
 
 const update = async (id, loan) => {
     await loanRepository.update(id, loan);
-}
+};
 
 const deleteLoan = async (id) => {
     await loanRepository.deleteById(id);
-}
+};
 
 const deleteAllLoans = async (id) => {
     await loanRepository.deleteAllByUserId(id);
-}
+};
 
-export const loanService = { create, getAll, getById, update, deleteLoan, deleteAllLoans }
+export const loanService = {
+    create,
+    getAll,
+    getById,
+    update,
+    deleteLoan,
+    deleteAllLoans
+};
