@@ -1,7 +1,7 @@
 import { userService } from '../services/user.service.js';
 
 const getAll = (req, res, next) => {
-  userService.getAll(req.query["page"], req.query["size"]).then((response) =>
+  userService.getAll(req.query['page'], req.query['size'],req.query['firstname'],req.query['lastname'],req.query['email']).then((response) =>
     res.status(200).json(response)
   ).catch((err) => {
     next(err)
