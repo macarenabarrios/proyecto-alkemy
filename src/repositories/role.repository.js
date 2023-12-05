@@ -1,22 +1,24 @@
-import  Role  from "../db/models/role.model.js";
+import Role from '../db/models/role.model.js';
 
-
-const findByName = async (name) =>{
+const findByName = async (name) => {
     const response = await Role.findOne({
-        where:{
-            name:name,
+        where: {
+            name: name,
         },
     });
     return response;
-}
+};
 
-const findById = async (id) =>{
+const findById = async (id) => {
     const response = await Role.findOne({
-        where:{
-            id:id
+        where: {
+            id: id
         },
     });
     return response;
-}
+};
 
-export const roleRepository = {findByName,findById}
+export const roleRepository = {
+    findByName,
+    findById
+};

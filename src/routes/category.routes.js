@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { 
-	save, 
-	saveBookCategory, 
+import {
+	save,
+	saveBookCategory,
 	update,
 	updateBookCategory,
-	getAllBookCategory, 
+	getAllBookCategory,
 	getById,
 	getByIdBookCategory,
 	deleteCategory,

@@ -1,5 +1,5 @@
-import User from "../db/models/user.model.js";
-import Role from "../db/models/role.model.js";
+import User from '../db/models/user.model.js';
+import Role from '../db/models/role.model.js';
 
 const findAll = async () => {
 	try {
@@ -42,11 +42,13 @@ const findById = async (id) => {
 	});
 	return response;
 };
+
 const save = async (user) => {
 	const newUser = await User.create(user);
 	console.log(newUser.dataValues);
 	return newUser.dataValues;
 };
+
 const update = async (id, user) => {
 	await User.update(user, {
 		where: {
