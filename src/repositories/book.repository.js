@@ -1,8 +1,46 @@
-
 import Book from '../db/models/book.model.js';
 import Author from '../db/models/author.model.js';
 import Category from '../db/models/category.model.js';
 import Publisher from '../db/models/publisher.model.js';
+import { Op } from 'sequelize';
+
+const availableBooks = async (authorName = '', bookTitle = '') => {
+	try {
+		let whereClause = {
+			stock: {
+				[Op.gt]: 0,
+			},
+		};
+
+		if (authorName !== '') {
+			whereClause['$authors.firstName$'] = {
+				[Op.like]: `%${authorName}%`,
+			};
+		}
+
+		if (bookTitle !== '') {
+			whereClause.title = {
+				[Op.like]: `%${bookTitle}%`,
+			};
+		}
+
+		const books = await Book.findAll({
+			where: whereClause,
+			include: [
+				{
+					model: Author,
+					as: 'authors',
+					attributes: ['firstName', 'lastName'],
+					through: { attributes: [] },
+				},
+			],
+		});
+
+		return books;
+	} catch (error) {
+		throw new Error(`Error en el repositorio al obtener libros disponibles: ${error.message}`);
+	}
+};
 
 const deleteBook = async (id) => {
 	await Book.destroy({
@@ -24,6 +62,13 @@ const getById = async (id) => {
 			where: { isActive: true },
 			include: [{ model: Category, through: { attributes: [] } }, { model: Author, through: { attributes: [] } }],
 		});
+	return book;
+};
+
+const getByTitle = async (bookTitle) => {
+	const book = await Book.findOne({
+		where: { title: bookTitle }
+	});
 	return book;
 };
 
@@ -95,9 +140,11 @@ const update = async (id, book) => {
 };
 
 export const bookRepository = {
+	availableBooks,
 	deleteBook,
 	getAll,
 	getById,
+	getByTitle,
 	newBook,
 	update
 };

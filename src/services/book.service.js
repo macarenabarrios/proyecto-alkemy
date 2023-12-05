@@ -1,5 +1,14 @@
 import { bookRepository } from '../repositories/book.repository.js';
 
+const availableBooks = async (authorName, bookTitle) => {
+	try {
+		const books = await bookRepository.availableBooks(authorName, bookTitle);
+		return books;
+	} catch (error) {
+		throw new Error(`Error en el servicio al obtener libros disponibles: ${error.message}`);
+	}
+};
+
 const deleteBook = async (id) => {
 	let book = await bookRepository.getById(id);
 	if (!book) {
@@ -41,6 +50,7 @@ const update = async (id, book) => {
 };
 
 export const bookService = {
+	availableBooks,
 	deleteBook,
 	getAll,
 	getById,

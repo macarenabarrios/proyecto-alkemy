@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from './../index.db.js';
+import { sequelize } from '../index.db.js';
 
 const Publisher = sequelize.define("publishers", {
   name: {
