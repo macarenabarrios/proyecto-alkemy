@@ -3,6 +3,7 @@ import EntityNotFoundError from "../exceptions/EntityNotFoundError.js";
 import { loanRepository } from "../repositories/loan.repository.js";
 import { userRepository } from "../repositories/user.repository.js";
 import { bookService } from "./book.service.js";
+
 const getAll = async () => {
 	const response = await loanRepository.findAll();
 	return response;
@@ -99,18 +100,6 @@ const deleteAllLoans = async (id) => {
 	await loanRepository.deleteAllByUserId(id);
 };
 
-// const returnBook = async (userId, bookId)=> {
-//     console.log({service: bookId +" " +  userId})
-//     const loanDb = await loanRepository.findByUserIdAndBookId(userId,bookId);
-//     const book = loanDb.book;
-//     console.log({book: loanDb.book})
-
-//     console.log({"book stock": book.stock})
-//     book.stock = book.stock + 1
-//     book.returned = true;
-//     const updatedBook = await bookService.update(bookId, book);
-//     console.log({"book stock": updatedBook})
-// }
 const returnBook = async (userId, bookId) => {
 	try {
 		const loanDb = await loanRepository.findByUserIdAndBookId(userId, bookId);
@@ -120,7 +109,6 @@ const returnBook = async (userId, bookId) => {
 			);
 		}
 		const book = loanDb.book;
-		console.log({ book: loanDb.book, "book stock": book.stock });
 
         book.set({
             stock: book.stock+1,
@@ -131,7 +119,6 @@ const returnBook = async (userId, bookId) => {
         book.save();
         loanDb.save();
 	} catch (error) {
-		console.error(error);
 		throw error;
 	}
 };
