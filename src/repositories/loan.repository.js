@@ -68,7 +68,7 @@ const deleteById = async (id) => {
 const deleteAllByUserId = async (id) => {
   await Loan.destroy({
     where: {
-      user_id: id
+      userId: id
     }
   })
 };
