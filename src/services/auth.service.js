@@ -5,7 +5,7 @@ import { comparePassword } from '../utils/hash.util.js';
 import { sendEmail } from './email.service.js';
 import welcomeMessage from '../config/messages/welcome.Message.js';
 import { recordUserAction } from '../services/user-action-log.service.js';
-import actions from '../utils/constants/actions.js';
+import Actions from '../utils/constants/actions.js';
 
 
 export const authenticate = async (email, password) => {
@@ -18,7 +18,7 @@ export const authenticate = async (email, password) => {
 		const response = await generateToken(user);
 		console.log(response);
 		try {
-			recordUserAction(actions.SIGN_IN_USER,user.id)
+			recordUserAction(Actions.SIGN_IN_USER,user.id)
 		} catch (error) {
 			throw error
 		}
@@ -39,7 +39,7 @@ export const register = async (user) => {
 		console.log(newUser)
 		const response = await generateToken(newUser);
 		try {
-			recordUserAction(actions.REGISTER_USER,newUser.id)
+			recordUserAction(Actions.REGISTER_USER,newUser.id)
 		} catch (error) {
 			throw error
 		}
