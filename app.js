@@ -4,7 +4,6 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import indexRouter from './src/routes/index.route.js'
 import seed from './src/db/seed.db.js';
-import ApplicationError from './src/exceptions/ApplicationError.js';
 import errorHandler from './src/middleware/error.middleware.js';
 import { extractAuthenticated } from './src/middleware/extract-authenticated.middleware.js';
 
@@ -40,9 +39,13 @@ main();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`app listening on port ${PORT}!`);
+});
+app.use((req, res, next) => {
+  const err = new Error('Path not Found');
+  err.status = 404;
+  next(err);
 });
 app.use(express.json());
 app.use(cookieParser());

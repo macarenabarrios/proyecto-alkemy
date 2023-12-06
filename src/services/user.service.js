@@ -26,7 +26,7 @@ const create = async (user) => {
     const newUser = await userRepository.save(user);
     return newUser;
   } catch (error) {
-    console.error(error);
+    throw error
   }
 };
 
