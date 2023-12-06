@@ -1,9 +1,8 @@
-import User from "../db/models/user.model.js";
-import Loan from "../db/models/loan.model.js";
-import Book from "../db/models/book.model.js";
-import BookCategory from "../db/models/bookCategory.model.js";
-import Category from "../db/models/category.model.js";
-
+import User from '../db/models/user.model.js';
+import Loan from '../db/models/loan.model.js';
+import Book from '../db/models/book.model.js';
+import BookCategory from '../db/models/bookCategory.model.js';
+import Category from '../db/models/category.model.js';
 
 const save = async (category) => {
   const newLoan = await Category.create(await category);
@@ -30,8 +29,6 @@ const findAll = async () => {
       ],
       attributes: ['id']
     });
-
-
     return response;
   } catch (error) {
     console.error("Error de Sequelize:", error.message);
@@ -94,7 +91,6 @@ const updateBookCategory = async (id, bookCategory) => {
   });
 };
 
-
 const deleteById = async (id) => {
   await Category.destroy({
     where: {
@@ -110,7 +106,6 @@ const deleteByIdBookCategory = async (id) => {
     },
   });
 };
-
 
 export const categoryRepository = {
   save,

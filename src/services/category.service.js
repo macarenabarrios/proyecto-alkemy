@@ -1,17 +1,16 @@
-import Book from "../db/models/book.model.js";
-import Category from "../db/models/category.model.js";
-import { categoryRepository } from "../repositories/category.repository.js";
-import { userRepository } from "../repositories/user.repository.js";
+import Book from '../db/models/book.model.js';
+import Category from '../db/models/category.model.js';
+import { categoryRepository } from '../repositories/category.repository.js';
 
 const getAll = async () => {
     const response = await categoryRepository.findAll();
     return response;
-}
+};
 
 const getAllCategories = async () => {
     const response = await categoryRepository.findAllCategories();
     return response;
-}
+};
 
 const getById = async (id) => {
     const bookCategory = await categoryRepository.findById(id)
@@ -19,7 +18,7 @@ const getById = async (id) => {
         throw new Error(`Loan doesn't exist with id ${id}`)
     }
     return bookCategory;
-}
+};
 
 const getByIdBookCategory = async (id) => {
     const bookCategory = await categoryRepository.findByIdBookCategory(id)
@@ -27,7 +26,7 @@ const getByIdBookCategory = async (id) => {
         throw new Error(`Category doesn't exist with id ${id}`)
     }
     return bookCategory;
-}
+};
 
 const createBookCategory = async (bookCategory) => {
     let response = {
@@ -119,19 +118,19 @@ const create = async (category) => {
 
 const update = async (id, bookCategory) => {
     await categoryRepository.update(id, bookCategory);
-}
+};
 
 const updateBookCategory = async (id, bookCategory) => {
     await categoryRepository.updateBookCategory(id, bookCategory);
-}
+};
 
 const deleteCategory = async (id) => {
     await categoryRepository.deleteById(id);
-}
+};
 
 const deleteBookCategory = async (id) => {
     await categoryRepository.deleteByIdBookCategory(id);
-}
+};
 
 export const categoryService = {
     create,
@@ -144,4 +143,4 @@ export const categoryService = {
     updateBookCategory,
     deleteBookCategory,
     deleteCategory
-}
+};

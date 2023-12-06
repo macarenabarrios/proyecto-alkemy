@@ -6,7 +6,7 @@ export const isAccountOwner = (req, res, next) => {
 
     try {
         token = token.replace("Bearer ", "")
-        const decode = jwt.verify(token, process.env.SECRET_KEY,{clo});
+        const decode = jwt.verify(token, process.env.SECRET_KEY);
         const user = decode;
 				console.log(user)
 				console.log(req.params.id)

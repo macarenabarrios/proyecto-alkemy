@@ -1,4 +1,14 @@
-import { bookService } from '../services/book.service.js'
+import { bookService } from '../services/book.service.js';
+
+const availableBooks = async (req, res, next) => {
+	bookService.availableBooks(req.query["authorName"], req.query["bookTitle"])
+		.then((response) => {
+			res.status(200).json(response);
+		})
+		.catch((err) => {
+			next(err)
+		})
+};
 
 const deleteBook = (req, res, next) => {
 	bookService.deleteBook(req.params.id)
@@ -7,7 +17,7 @@ const deleteBook = (req, res, next) => {
 		})
 		.catch((err) => {
 			console.log(err);
-			res.status(404).json({ error: err.message }); // Cambiado a 404 Not Found
+			res.status(404).json({ error: err.message });
 			next(err);
 		});
 };
@@ -67,6 +77,7 @@ const getByAuthorOrTitle = (req, res, next) => {
 		});
 };
 export const bookController = {
+	availableBooks,
 	deleteBook,
 	getAll,
 	getById,

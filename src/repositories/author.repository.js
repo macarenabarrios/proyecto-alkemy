@@ -1,4 +1,4 @@
-import Author from "../db/models/author.model.js";
+import Author from '../db/models/author.model.js';
 
 const getAuthorById = async (id) => {
   try {

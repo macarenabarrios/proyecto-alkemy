@@ -1,4 +1,4 @@
-import { authorRepository } from "../repositories/author.repository.js";
+import { authorRepository } from '../repositories/author.repository.js';
 
 //Funcion para obtener un autor por Id
 const getById = async (id) => {
@@ -20,8 +20,8 @@ const getAllAuthors = async (page = 1, pageSize = 10, filterByName = null) => {
     // Aplica filtrado por nombre si es proporcionado
     const filteredAuthors = filterByName
       ? authors.filter((author) =>
-          author.firstName.toLowerCase().includes(filterByName.toLowerCase())
-        )
+        author.firstName.toLowerCase().includes(filterByName.toLowerCase())
+      )
       : authors;
 
     // Calcula el índice de inicio y fin para la paginación

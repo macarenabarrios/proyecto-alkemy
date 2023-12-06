@@ -1,6 +1,6 @@
-import User from "../db/models/user.model.js";
-import Loan from "../db/models/loan.model.js";
-import Book from "../db/models/book.model.js";
+import User from '../db/models/user.model.js';
+import Loan from '../db/models/loan.model.js';
+import Book from '../db/models/book.model.js';
 
 const save = async (loan) => {
   const newLoan = await Loan.create(await loan);
@@ -22,8 +22,6 @@ const findAll = async () => {
       ],
       attributes: ['id', 'startDate', 'dueDate']
     });
-
-
     return response;
   } catch (error) {
     console.error("Error de Sequelize:", error.message);
@@ -82,15 +80,36 @@ const countLoansByUserId = async (id) => {
         userId: id
       }
     });
-
     console.log(`Número de préstamos para el usuario con ID ${id}: ${loanCount}`);
     return loanCount;
   } catch (error) {
     console.error('Error al contar préstamos:', error);
-    throw error; // Puedes manejar el error según tus necesidades
+    throw error;
   }
 };
 
+const findByUserIdAndBookId = async (userId, bookId) => {
+  const loan = await Loan.findOne({
+    where: {
+      userId: userId,
+      bookId: bookId,
+      returned: false
+    },
+    include: [{
+      model: Book,
+      as: "book"
+    }]
+  })
+  return loan;
+};
 
-
-export const loanRepository = { save, findAll, findById, update, deleteById, countLoansByUserId, deleteAllByUserId };
+export const loanRepository = {
+  save,
+  findAll,
+  findById,
+  update,
+  deleteById,
+  countLoansByUserId,
+  deleteAllByUserId,
+  findByUserIdAndBookId
+};
