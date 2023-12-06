@@ -6,7 +6,7 @@ import indexRouter from './src/routes/index.route.js'
 import seed from './src/db/seed.db.js';
 import ApplicationError from './src/exceptions/ApplicationError.js';
 import errorHandler from './src/middleware/error.middleware.js';
-
+import { extractAuthenticated } from './src/middleware/extract-authenticated.middleware.js';
 
 
 dotenv.config();
@@ -21,7 +21,9 @@ import './src/db/models/role.model.js';
 import './src/db/models/loan.model.js';
 import './src/db/models/publisher.model.js';
 import './src/db/models/review.model.js';
+import './src/db/models/user-action-log.model.js';
 import './src/db/associations.db.js';
+
 
 //Conexion y generacion de la base de datos
 const main = async () => {
@@ -45,7 +47,7 @@ app.listen(PORT, () => {
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
-app.use('/api', indexRouter);
+app.use('/api',extractAuthenticated, indexRouter);
 app.use(errorHandler);
 
 
