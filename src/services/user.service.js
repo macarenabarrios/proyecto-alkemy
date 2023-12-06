@@ -2,8 +2,8 @@ import { roleRepository } from '../repositories/role.repository.js';
 import { userRepository } from '../repositories/user.repository.js';
 import { hashPassword } from '../utils/hash.util.js';
 
-const getAll = async (page,size) => {
-  const response = await userRepository.findAll(page,size);
+const getAll = async (page, size) => {
+  const response = await userRepository.findAll(page, size);
   return response;
 };
 
