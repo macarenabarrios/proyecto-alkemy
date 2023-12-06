@@ -1,6 +1,6 @@
 
 import Book from '../db/models/book.model.js'
-
+import Author from '../db/models/author.model.js'
 const deleteBook = async (id) => {
 	await Book.destroy({
 		where: { id }
@@ -48,10 +48,31 @@ const update = async (id, book) => {
 	return updatedBook;
 };
 
+const getByAuthorOrTitle = async (authorId, title ) => {
+	const search= {}
+	if ( title){ 
+		search.title= title
+	}
+	if (authorId){
+		search.authorId= authorId
+	}
+	return await Book.findAll ({ 
+		include: [
+      {
+        model:Author, 
+        through: { attributes: ["authorId"] }, 
+      },
+    ],
+    where:{
+			search
+		}
+	})
+};	
 export const bookRepository = {
 	deleteBook,
 	getAll,
 	getById,
 	newBook,
-	update
+	update,
+	getByAuthorOrTitle
 };

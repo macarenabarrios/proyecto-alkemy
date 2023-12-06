@@ -55,10 +55,22 @@ const update = (req, res, next) => {
 		});
 };
 
+const getByAuthorOrTitle = (req, res, next) => {
+	bookService.getByAuthorOrTitle(req.query)
+		.then((response) => {
+			res.status(200).json(response)
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).json({ error: err.message });
+			next(err)
+		});
+};
 export const bookController = {
 	deleteBook,
 	getAll,
 	getById,
 	newBook,
-	update
+	update,
+	getByAuthorOrTitle
 };
