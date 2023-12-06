@@ -2,6 +2,8 @@ import jwt from 'jsonwebtoken';
 import { userService } from './user.service.js';
 import { roleService } from './role.service.js';
 import { comparePassword } from '../utils/hash.util.js';
+import { sendEmail } from './email.service.js';
+import welcomeMessage from '../config/messages/welcome.Message.js';
 
 export const authenticate = async (email, password) => {
 	try {
@@ -19,6 +21,11 @@ export const authenticate = async (email, password) => {
 export const register = async (user) => {
 	try {
 		const newUser = await userService.create(user);
+		const { email, firstname } = user;
+		const subject = 'Bienvenido a Alkemy Library';
+		const text = welcomeMessage.replace('{firstname}', firstname);
+		await sendEmail(email, subject, text);
+		console.log("Usuario registrado exitosamente");
 		console.log(newUser)
 		return generateToken(newUser);
 	} catch (error) {
