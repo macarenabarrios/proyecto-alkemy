@@ -24,12 +24,16 @@ const create = async (user) => {
     const newUser = await userRepository.save(user);
     return newUser;
   } catch (error) {
-    console.error(error);
+    throw error
   }
 };
 
 const update = async (id, user) => {
-  await userRepository.update(id, user);
+  try {
+    await userRepository.update(id, user);
+  } catch (error) {
+    throw error
+  }
 };
 
 const deleteUser = async (id) => {

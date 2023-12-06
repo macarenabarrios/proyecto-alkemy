@@ -27,7 +27,7 @@ const save = (req, res, next) => {
 };
 
 const update = (req, res, next) => {
-  userService.update(req.params.id, req.body)
+  userService.update(req.userId, req.body)
     .then(() => {
       res.status(200).json()
     })
