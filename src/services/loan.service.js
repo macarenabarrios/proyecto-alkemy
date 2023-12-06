@@ -2,7 +2,7 @@ import Book from '../db/models/book.model.js';
 import EntityNotFoundError from '../exceptions/EntityNotFoundError.js';
 import { loanRepository } from '../repositories/loan.repository.js';
 import { userRepository } from '../repositories/user.repository.js';
-import { bookService } from './book.service.js';
+import { sendLoanNotification } from './email.service.js';
 
 const getAll = async () => {
 	const response = await loanRepository.findAll();
@@ -68,6 +68,12 @@ const create = async (loan) => {
 
 					response.availableLoans = 3 - countLoans;
 					response.data = newLoan;
+
+					await sendLoanNotification(user.email, user.firstname, {
+						books: book.title,
+						loanDate: newLoan.startDate,
+						dueDate: newLoan.dueDate,
+					});
 
 					return response;
 				} else {
