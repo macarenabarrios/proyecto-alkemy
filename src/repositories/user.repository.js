@@ -1,11 +1,26 @@
 import User from "../db/models/user.model.js";
 import Role from "../db/models/role.model.js";
 
-const findAll = async (page = 0, size = 10) => {
+const findAll = async (page = 0, size = 10,firstname,lastname, email) => {
 	page = parseInt(page);
 	size = parseInt(size);
 	const offset = page === 0 ? page : page * size;
 	const limit = parseInt(size);
+
+	let where = {}
+	if(firstname){
+		where.firstname = firstname;
+	}
+	if(email){
+		where.email = email ;
+	}
+	if(lastname){
+		where.lastname = lastname ;
+	}
+	where.isActive = true;
+
+
+
 	try {
 		const { count, rows } = await User.findAndCountAll({
 			
@@ -22,9 +37,7 @@ const findAll = async (page = 0, size = 10) => {
 					attributes: ["name"],
 				},
 			],
-			where: {
-				isActive: true,
-			},
+			where: where,
 		});
 		return {
 			content:rows,
