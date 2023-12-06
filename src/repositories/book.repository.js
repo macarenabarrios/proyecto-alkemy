@@ -155,6 +155,26 @@ const update = async (id, book) => {
 	return updatedBook;
 };
 
+const getByAuthorOrTitle = async (authorId, title ) => {
+	const search= {}
+	if ( title){ 
+		search.title= title
+	}
+	if (authorId){
+		search.authorId= authorId
+	}
+	return await Book.findAll ({ 
+		include: [
+      {
+        model:Author, 
+        through: { attributes: ["authorId"] }, 
+      },
+    ],
+    where:{
+			search
+		}
+	})
+};	
 export const bookRepository = {
 	availableBooks,
 	deleteBook,
@@ -163,4 +183,5 @@ export const bookRepository = {
 	getByTitle,
 	newBook,
 	update,
+	getByAuthorOrTitle
 };

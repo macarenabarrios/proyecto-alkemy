@@ -25,6 +25,11 @@ const Book = sequelize.define("books", {
   image: {
     type: DataTypes.TEXT,
   },
+  average: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+    defaultValue: 0,
+  },
   isActive: {
     type: DataTypes.BOOLEAN,
     allowNull: false,

@@ -49,11 +49,15 @@ const update = async (id, book) => {
 	return updatedBook;
 };
 
+const getByAuthorOrTitle= async (authorId, title) =>{
+  return await bookRepository.getByAuthorOrTitle(authorId, title);
+}
 export const bookService = {
 	availableBooks,
 	deleteBook,
 	getAll,
 	getById,
 	newBook,
-	update
+	update,
+	getByAuthorOrTitle
 };

@@ -9,5 +9,6 @@ router.get('/available', bookController.availableBooks);
 router.post('', bookController.newBook);
 router.put('/:id', bookController.update);
 router.delete('/:id', bookController.deleteBook);
+router.get('/author-title', bookController.getByAuthorOrTitle);
 
 export default router;
