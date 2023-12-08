@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import newLoanMessage from '../config/messages/newLoan.Message.js';
+import newDueLoanMessage from '../config/messages/dueLoan.message.js';
 
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
@@ -52,7 +53,34 @@ const sendLoanNotification = async (to, firstname, loanDetails) => {
 	}
 };
 
+const sendDueLoanNotification = async (to, firstname, loanDetails) => {
+	const { books, loanDate, dueDate } = loanDetails;
+
+	const text = newDueLoanMessage
+		.replace('{firstname}', firstname)
+		.replace('{Libro}', books)
+		.replace('{Fecha}', loanDate)
+		.replace('{Fecha de vencimiento}', dueDate);
+
+	const mailOptions = {
+		from: process.env.GMAIL_USER,
+		to,
+		subject: 'Préstamo vencido en Alkemy Library',
+		text,
+	};
+
+	try {
+		await transporter.sendMail(mailOptions);
+		console.log('Correo electrónico enviado con éxito');
+	} catch (error) {
+		console.error('Error al enviar el correo electrónico:', error);
+		throw new Error('Error al enviar el correo electrónico');
+	}
+};
+
+
 export {
 	sendEmail,
-	sendLoanNotification
+	sendLoanNotification,
+	sendDueLoanNotification
 };

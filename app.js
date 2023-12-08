@@ -6,8 +6,7 @@ import indexRouter from './src/routes/index.route.js'
 import seed from './src/db/seed.db.js';
 import ApplicationError from './src/exceptions/ApplicationError.js';
 import errorHandler from './src/middleware/error.middleware.js';
-
-
+import { dueReminder } from './src/utils/cron.util.js';
 
 dotenv.config();
 
@@ -48,5 +47,6 @@ app.use(cors());
 app.use('/api', indexRouter);
 app.use(errorHandler);
 
+dueReminder()
 
 export default app;
