@@ -1,8 +1,15 @@
 import { bookRepository } from '../repositories/book.repository.js';
 
-const availableBooks = async (authorName, bookTitle) => {
+const availableBooks = async (authorName, bookTitle, categoryName, page) => {
 	try {
-		const books = await bookRepository.availableBooks(authorName, bookTitle);
+		let options ={}
+		if (page && !isNaN (page)){
+			options={
+				offset: (page - 1) * 10,
+				limit: 10
+			}
+		}
+		const books = await bookRepository.availableBooks(authorName, bookTitle,categoryName,options);
 		return books;
 	} catch (error) {
 		throw new Error(`Error en el servicio al obtener libros disponibles: ${error.message}`);

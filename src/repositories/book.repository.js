@@ -4,7 +4,7 @@ import Category from '../db/models/category.model.js';
 import Publisher from '../db/models/publisher.model.js';
 import { Op } from 'sequelize';
 
-const availableBooks = async (authorName = '', bookTitle = '') => {
+const availableBooks = async (authorName = '', bookTitle = '', categoryName = '', options) => {
 	try {
 		let whereClause = {
 			stock: {
@@ -24,13 +24,26 @@ const availableBooks = async (authorName = '', bookTitle = '') => {
 			};
 		}
 
+		if (categoryName !== '') {
+			whereClause['$categorys.name$'] = {
+				[Op.like]: `%${categoryName}%`,
+			};
+		}
+
 		const books = await Book.findAll({
+			options,
 			where: whereClause,
 			include: [
 				{
 					model: Author,
 					as: 'authors',
 					attributes: ['firstName', 'lastName'],
+					through: { attributes: [] },
+				},
+				{
+					model: Category,
+					as: 'categorys',
+					attributes: ['name'],
 					through: { attributes: [] },
 				},
 			],
