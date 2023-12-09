@@ -33,7 +33,7 @@ const create = async (user) => {
 const update = async (id, user) => {
   try {
     await userRepository.update(id, user);
-    recordUserAction(Actions.UPDATE_USER,user.id)
+    // recordUserAction(Actions.UPDATE_USER,user.id)
     
   } catch (error) {
     throw error
@@ -44,7 +44,7 @@ const deleteUser = async (id) => {
   try {
     
     await userRepository.deleteById(id);
-    recordUserAction(Actions.DELETE_USER,user.id)
+    // recordUserAction(Actions.DELETE_USER,user.id)
   } catch (error) {
     throw error
   }
