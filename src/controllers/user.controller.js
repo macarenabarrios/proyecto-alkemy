@@ -1,4 +1,6 @@
+
 import { userService } from '../services/user.service.js';
+
 
 const getAll = (req, res, next) => {
   userService.getAll(req.query['page'], req.query['size'],req.query['firstname'],req.query['lastname'],req.query['email']).then((response) =>
@@ -27,7 +29,7 @@ const save = (req, res, next) => {
 };
 
 const update = (req, res, next) => {
-  userService.update(req.params.id, req.body)
+  userService.update(req.userId, req.body)
     .then(() => {
       res.status(200).json()
     })

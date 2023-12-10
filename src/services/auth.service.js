@@ -2,8 +2,11 @@ import jwt from 'jsonwebtoken';
 import { userService } from './user.service.js';
 import { roleService } from './role.service.js';
 import { comparePassword } from '../utils/hash.util.js';
-import { sendEmail } from '../communications/email.service.js';
-import welcomeMessage from '../communications/messages/welcome.Message.js';
+import { sendEmail } from './email.service.js';
+import welcomeMessage from '../config/messages/welcome.Message.js';
+import { recordUserAction } from '../services/user-action-log.service.js';
+import Actions from '../utils/constants/actions.js';
+
 
 export const authenticate = async (email, password) => {
 	try {
@@ -12,7 +15,14 @@ export const authenticate = async (email, password) => {
 		const validPassword = await comparePassword(password, user.password);
 		if (!validPassword) throw new Error("Bad credentials");
 		if (!user.isActive) throw new Error("Confirm your account");
-		return generateToken(user);
+		const response = await generateToken(user);
+		console.log(response);
+		try {
+			recordUserAction(Actions.SIGN_IN_USER,user.id)
+		} catch (error) {
+			throw error
+		}
+		return response;
 	} catch (error) {
 		throw error;
 	}
@@ -27,7 +37,13 @@ export const register = async (user) => {
 		await sendEmail(email, subject, text);
 		console.log("Usuario registrado exitosamente");
 		console.log(newUser)
-		return generateToken(newUser);
+		const response = await generateToken(newUser);
+		try {
+			recordUserAction(Actions.REGISTER_USER,newUser.id)
+		} catch (error) {
+			throw error
+		}
+		return response;
 	} catch (error) {
 		throw error;
 	}

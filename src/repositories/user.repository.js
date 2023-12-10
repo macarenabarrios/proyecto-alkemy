@@ -49,12 +49,14 @@ const findAll = async (page = 0, size = 10, firstname, lastname, email) => {
 
 
 const findById = async (id) => {
-	const response = await User.findOne({
-		attributes: {
-			exclude: ["roleId"],
-		},
-		include: [
-			{
+	try {
+		
+		const response = await User.findOne({
+			attributes: {
+				exclude: ["roleId"],
+			},
+			include: [
+				{
 				model: Role,
 				attributes: ["name"],
 			},
@@ -65,6 +67,9 @@ const findById = async (id) => {
 		},
 	});
 	return response;
+} catch (error) {
+	throw error
+}
 };
 
 const save = async (user) => {
@@ -74,11 +79,15 @@ const save = async (user) => {
 };
 
 const update = async (id, user) => {
-	await User.update(user, {
-		where: {
-			id: id,
-		},
-	});
+	try {
+		await User.update(user, {
+			where: {
+				id: id,
+			},
+		});
+	} catch (error) {
+		throw error
+	}
 };
 
 const deleteById = async (id) => {
