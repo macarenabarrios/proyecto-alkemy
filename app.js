@@ -7,8 +7,6 @@ import seed from './src/db/seed.db.js';
 import ApplicationError from './src/exceptions/ApplicationError.js';
 import errorHandler from './src/middleware/error.middleware.js';
 
-
-
 dotenv.config();
 
 //Instancia de Sequelize
@@ -26,7 +24,7 @@ import './src/db/associations.db.js';
 //Conexion y generacion de la base de datos
 const main = async () => {
   try {
-    await sequelize.sync();
+    await sequelize.sync({ alter: true, force: false });
     seed()
     console.log('Connection has been established successfully.');
   } catch (error) {
@@ -38,15 +36,19 @@ main();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 app.use('/api', indexRouter);
+app.use((req, res, next) => {
+  const err = new Error('Path not Found');
+  err.status = 404;
+  next(err);
+});
 app.use(errorHandler);
 
+app.listen(PORT, () => {
+  console.log(`app listening on port ${PORT}!`);
+});
 
 export default app;

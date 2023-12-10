@@ -3,6 +3,7 @@ import Author from '../db/models/author.model.js';
 import Category from '../db/models/category.model.js';
 import Publisher from '../db/models/publisher.model.js';
 import { Op } from 'sequelize';
+import { authorService } from '../services/author.service.js';
 
 const availableBooks = async (authorName = '', bookTitle = '') => {
 	try {
@@ -83,12 +84,13 @@ const getByTitle = async (bookTitle) => {
 };
 
 const newBook = async (book) => {
-	const authorsId = book.authors;
 	const categoryId = book.categories;
 	const publisherId = book.publisherId;
+	const authorsId = book.authorsId;
+	const authors = book.authors;
 
-	if (!authorsId) {
-		throw new Error("Debe agregar uno o más autores");
+	if (!(authorsId && authorsId.length) && !(authors && authors.length)) {
+		throw new Error("Debe agregar uno o más autores (authors y/o authorsId)");
 	}
 	if (!categoryId) {
 		throw new Error("Debe agregar una o más categorías");
@@ -97,18 +99,15 @@ const newBook = async (book) => {
 		throw new Error("Debe especificar exactamente un publisher");
 	}
 
-	await Promise.all(
-		authorsId.map(async (id) => {
-			const authors = await Author.findByPk(id);
-			if (!authors) throw new Error(`El autor con ID ${id} no existe`);
-		})
-	);
+	// Verificar existencia de categorias por ID
 	await Promise.all(
 		categoryId.map(async (id) => {
 			const category = await Category.findByPk(id);
 			if (!category) throw new Error(`La categoría con ID ${id} no existe`);
 		})
 	);
+
+	// Verificar existencia del publisher
 	const publisher = await Publisher.findOne({
 		where: { id: publisherId },
 	});
@@ -118,19 +117,59 @@ const newBook = async (book) => {
 
 	try {
 		const createdBook = await Book.create(book);
-		if (authorsId.length) {
-			const authors = await Author.findAll({
+
+		// Obtiene y agrega autores existentes al libro
+		if (authorsId && authorsId.length) {
+			const existingAuthors = await Author.findAll({
 				where: { id: authorsId },
 			});
-			await createdBook.addAuthors(authors, { through: "Book_Author" });
+			await createdBook.addAuthors(existingAuthors, { through: "Book_Author" });
 		}
+
+		// Obtiene y agrega autores nuevos al libro
+		if (authors && authors.length) {
+			const authorPromises = authors.map(async (newAuthor) => {
+				try {
+					// Intenta encontrar el autor por su nombre y fecha de nacimiento
+					//console.log("🐣", newAuthor.firstName, newAuthor.lastName)
+					const existingAuthor = await authorService.findAuthorByProperties({
+						firstName: newAuthor.firstName,
+						lastName: newAuthor.lastName
+					});
+
+					if (existingAuthor) {
+						// Si el autor ya existe, retorna su ID
+						return { id: existingAuthor.id };
+					} else {
+						// Si el autor no existe, lanza un error indicando que el autor no se encontró
+						throw new Error(`El autor no se encontró en la base de datos.`);
+					}
+				} catch (error) {
+					// Lanzar error si hay un problema al buscar el autor existente
+					throw new Error(`Error buscando autor existente: ${error.message}`);
+				}
+			});
+
+			try {
+				const existingAuthors = await Promise.all(authorPromises);
+				//console.log("🍅", existingAuthors);
+
+				// Agregar los autores existentes al libro
+				await createdBook.addAuthors(existingAuthors.map(author => author.id), { through: "Book_Author" });
+			} catch (error) {
+				console.error(`Error al agregar autores al libro: ${error.message}`);
+			}
+		}
+
 		if (categoryId.length) {
 			const categories = await Category.findAll({
 				where: { id: categoryId },
 			});
 			await createdBook.addCategories(categories);
 		}
+
 		return createdBook;
+
 	} catch (error) {
 		if (error.name === "SequelizeValidationError") {
 			throw new Error(`Validation error: ${error.message}`);
@@ -155,26 +194,26 @@ const update = async (id, book) => {
 	return updatedBook;
 };
 
-const getByAuthorOrTitle = async (authorId, title ) => {
-	const search= {}
-	if ( title){ 
-		search.title= title
+const getByAuthorOrTitle = async (authorId, title) => {
+	const search = {}
+	if (title) {
+		search.title = title
 	}
-	if (authorId){
-		search.authorId= authorId
+	if (authorId) {
+		search.authorId = authorId
 	}
-	return await Book.findAll ({ 
+	return await Book.findAll({
 		include: [
-      {
-        model:Author, 
-        through: { attributes: ["authorId"] }, 
-      },
-    ],
-    where:{
+			{
+				model: Author,
+				through: { attributes: ["authorId"] },
+			},
+		],
+		where: {
 			search
 		}
 	})
-};	
+};
 export const bookRepository = {
 	availableBooks,
 	deleteBook,
