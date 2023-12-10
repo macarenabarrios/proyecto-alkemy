@@ -5,9 +5,9 @@ import cookieParser from 'cookie-parser';
 import indexRouter from './src/routes/index.route.js'
 import seed from './src/db/seed.db.js';
 import errorHandler from './src/middleware/error.middleware.js';
-
+import http from 'http';
+import { configureSocketIO } from './src/notifications/notification.service.js';
 import { extractAuthenticated } from './src/middleware/extract-authenticated.middleware.js';
-
 
 dotenv.config();
 
@@ -39,6 +39,24 @@ const main = async () => {
 main();
 
 const app = express();
+
+// Configuración Socket.IO
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const server = http.createServer(app);
+configureSocketIO(server);
+
+// Ruta de prueba
+import path from 'path';
+app.get('/', (req, res) => {
+  const filePath = path.join(__dirname, 'src', 'utils', 'html', 'notifications.html');
+  console.log('🌺🌺🌺🌺🌺🌺Ruta completa:', filePath);
+  res.sendFile(filePath);
+});
+
+
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
@@ -52,7 +70,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
-app.use('/api',extractAuthenticated, indexRouter);
+app.use('/api', extractAuthenticated, indexRouter);
 
 app.use(errorHandler);
 
