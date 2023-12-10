@@ -1,19 +1,5 @@
 import { authorRepository } from '../repositories/author.repository.js';
 
-//Funcion para obtener un autor por Id
-const getById = async (id) => {
-  try {
-    const response = await authorRepository.getAuthorById(id);
-    if (!response) {
-      throw { status: 404, message: "Autor no encontrado" };
-    }
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-//Funcion para obtener una lista de autores
 const getAllAuthors = async (page = 1, pageSize = 10, filterByName = null) => {
   try {
     const authors = await authorRepository.getAllAuthors();
@@ -37,6 +23,18 @@ const getAllAuthors = async (page = 1, pageSize = 10, filterByName = null) => {
   }
 };
 
+const getById = async (id) => {
+  try {
+    const response = await authorRepository.getAuthorById(id);
+    if (!response) {
+      throw { status: 404, message: "Autor no encontrado" };
+    }
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const createAuthor = async (authorData) => {
   try {
     const newAuthor = await authorRepository.createAuthor(authorData);
@@ -46,8 +44,18 @@ const createAuthor = async (authorData) => {
   }
 };
 
+const findAuthorByProperties = async (searchObject) => {
+  try {
+    const response = await authorRepository.findAuthorByProperties(searchObject);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const authorService = {
+  getAllAuthors,
   getById,
   createAuthor,
-  getAllAuthors,
+  findAuthorByProperties
 };
