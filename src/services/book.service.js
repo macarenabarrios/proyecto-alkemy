@@ -1,7 +1,7 @@
 import { bookRepository } from '../repositories/book.repository.js';
 import { authorService } from './author.service.js';
 import { userService } from './user.service.js';
-import { sendNewNotification } from './email.service.js';
+import { sendNewNotification } from '../communications/email.service.js';
 
 const availableBooks = async (authorName, bookTitle) => {
 	try {
@@ -49,7 +49,6 @@ const newBook = async (book) => {
 						throw new Error(`El autor con ID ${id} no existe`);
 					}
 				} catch (error) {
-					// Manejar errores específicos si es necesario
 					throw new Error(`Error verificando autor con ID ${id}: ${error.message}`);
 				}
 			})
@@ -65,12 +64,13 @@ const newBook = async (book) => {
 						lastName: newAuthor.lastName,
 						birthdate: newAuthor.birthdate,
 					});
+
 					if (!existingAuthor) {
-						// Crea el nuevo autor si no existe
-						await authorService.createAuthor(newAuthor);
+						return await authorService.createAuthor(newAuthor);
+					} else if (!existingAuthor.firstName || !existingAuthor.lastName) {
+						throw new Error(`Error creando autor: El autor encontrado no tiene las propiedades necesarias`);
 					}
 				} catch (error) {
-					// Lanzar error si hay un problema al crear el autor nuevo
 					throw new Error(`Error creando autor: ${error.message}`);
 				}
 			})
@@ -79,16 +79,30 @@ const newBook = async (book) => {
 		const createdBook = await bookRepository.newBook(book);
 
 		/**** Lógica para notificar por email a todos los usuarios  ****/
-		const newAuthorNames = createdAuthors.map(author => `${author.firstName} ${author.lastName}`).join(', ');
 
-		const allAuthors = newAuthorNames.length > 0 ? [...authors, ...createdAuthors] : [...authors];
+		const existingAuthorIds = new Set(authorsId);
+		const allAuthorIds = new Set([...existingAuthorIds, ...createdAuthors.map(author => author.id)]);
+		const allAuthors = await Promise.all(Array.from(allAuthorIds).map(async authorId => {
+			if (existingAuthorIds.has(authorId)) {
+				// Si el autor existe, obtiene sus detalles
+				const existingAuthor = await authorService.getById(authorId);
+				return existingAuthor;
+			} else {
+				// Si el autor es recién creado, lo busca en la lista
+				return createdAuthors.find(createdAuthor => createdAuthor.id === authorId);
+			}
+		}));
+
+		const hasNewAuthors = createdAuthors.length > 0;
+
+		const subject = hasNewAuthors
+			? 'Nuevo Autor y Libro en Alkemy Library'
+			: 'Nuevo Libro en Alkemy Library';
 
 		const notificationData = {
 			book: book.title,
 			author: allAuthors,
-			subject: newAuthorNames.length > 0
-				? 'Nuevo Autor y Libro en Alkemy Library'
-				: 'Nuevo Libro en Alkemy Library',
+			subject: subject,
 			createdAt: new Date(),
 		};
 
@@ -127,30 +141,3 @@ export const bookService = {
 	update,
 	getByAuthorOrTitle
 };
-
-/**
- *
- * 		const users = await userService.getAll();
-		const subject = authors.length > 0 ? 'Nuevo Libro en Alkemy Library' : 'Nuevo Autor y Libro en Alkemy Library';
-
-		for (const user of users) {
-			try {
-				// Si authors.length es 0, esto lanzará un error y se manejará en el bloque catch
-				const authorFullNames = authors.map(author => `${author.firstname} ${author.lastname}`).join(', ');
-				await sendNewNotification(user.email, user.firstname, {
-					book: createdBook.title,
-					authors: authorFullNames,
-					subject
-				});
-				// Solo envía el correo una vez si hay al menos un autor nuevo
-				break;
-			} catch (error) {
-				// Si se lanza un error, asumimos que no hay autores nuevos y continuamos con el siguiente bloque
-			}
-
-			await sendNewNotification(user.email, user.firstname, {
-				book: createdBook.title,
-				author: `${authors[0].firstname} ${authors[0].lastname}`, // Ajusta esto según tu lógica
-			});
-		}
- */

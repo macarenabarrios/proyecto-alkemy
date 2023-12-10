@@ -130,29 +130,23 @@ const newBook = async (book) => {
 		if (authors && authors.length) {
 			const authorPromises = authors.map(async (newAuthor) => {
 				try {
-					// Intenta encontrar el autor por su nombre y fecha de nacimiento
-					//console.log("🐣", newAuthor.firstName, newAuthor.lastName)
 					const existingAuthor = await authorService.findAuthorByProperties({
 						firstName: newAuthor.firstName,
 						lastName: newAuthor.lastName
 					});
 
 					if (existingAuthor) {
-						// Si el autor ya existe, retorna su ID
 						return { id: existingAuthor.id };
 					} else {
-						// Si el autor no existe, lanza un error indicando que el autor no se encontró
 						throw new Error(`El autor no se encontró en la base de datos.`);
 					}
 				} catch (error) {
-					// Lanzar error si hay un problema al buscar el autor existente
 					throw new Error(`Error buscando autor existente: ${error.message}`);
 				}
 			});
 
 			try {
 				const existingAuthors = await Promise.all(authorPromises);
-				//console.log("🍅", existingAuthors);
 
 				// Agregar los autores existentes al libro
 				await createdBook.addAuthors(existingAuthors.map(author => author.id), { through: "Book_Author" });

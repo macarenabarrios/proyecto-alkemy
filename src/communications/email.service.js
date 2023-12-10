@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
-import newLoanMessage from '../config/messages/newLoan.message.js';
-import newBookNotification from '../config/messages/newBook.message.js';
-import newBookAndAuthorNotification from '../config/messages/newBookAndAuthor.message.js';
+import newLoanMessage from './messages/newLoan.message.js';
+import newBookNotification from './messages/newBook.message.js';
+import newBookAndAuthorNotification from './messages/newBookAndAuthor.message.js';
 
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
@@ -10,15 +10,6 @@ const transporter = nodemailer.createTransport({
 		pass: process.env.GMAIL_PASS
 	},
 });
-
-/* const createMailOptions = (to, subject, text) => {
-	return {
-		from: process.env.GMAIL_USER,
-		to,
-		subject,
-		text,
-	};
-}; */
 
 const createMailOptions = (to, subject, text) => {
 	return {
@@ -32,12 +23,6 @@ const createMailOptions = (to, subject, text) => {
 const sendEmail = async (to, subject, text) => {
 	const mailOptions = createMailOptions(to, subject, text);
 
-	/* 	const mailOptions = {
-			from: process.env.GMAIL_USER,
-			to: Array.isArray(to) ? to.join(', ') : to,
-			subject,
-			text,
-		}; */
 	console.log("sendEmail", mailOptions);
 	try {
 		await transporter.sendMail(mailOptions);
@@ -69,22 +54,20 @@ const sendLoanNotification = async (to, firstname, loanDetails) => {
 };
 
 const sendNewNotification = async (to, firstname, data) => {
-
-	console.log("👾 Parametros de sendNewNotification:", to, firstname, data);
-
 	const { book, author, subject, createdAt } = data;
-	console.log(book, author, subject, createdAt);
+
+	const authorString = author.map(author => `${author.firstName} ${author.lastName}`).join(', ');
 
 	const text = subject === 'Nuevo Autor y Libro en Alkemy Library'
 		? newBookAndAuthorNotification
 			.replace('{firstname}', firstname)
 			.replace('{Libro}', book)
-			.replace('{Autor}', author)
+			.replace('{Autor}', authorString)
 			.replace('{Fecha de ingreso}', new Date(createdAt).toLocaleDateString())
 		: newBookNotification
 			.replace('{firstname}', firstname)
 			.replace('{Libro}', book)
-			.replace('{Autor}', author)
+			.replace('{Autor}', authorString)
 			.replace('{Fecha de ingreso}', new Date(createdAt).toLocaleDateString());
 
 	const mailOptions = createMailOptions(to, subject, text);
@@ -101,4 +84,4 @@ export {
 	sendEmail,
 	sendLoanNotification,
 	sendNewNotification
-}
+};
