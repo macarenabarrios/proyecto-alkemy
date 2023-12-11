@@ -129,6 +129,25 @@ const returnBook = async (userId, bookId) => {
 	}
 };
 
+const getLoanDetails = async (id) => {
+  try {
+    const loan = await loanRepository.findById(id);
+    if (!loan) {
+      throw new Error('Loan not found');
+    }
+
+    return {
+      loanId: loan.id,
+      startDate: loan.startDate,
+      dueDate: loan.dueDate,
+      returned: loan.returned,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 export const loanService = {
 	create,
 	getAll,
@@ -137,4 +156,5 @@ export const loanService = {
 	deleteLoan,
 	deleteAllLoans,
 	returnBook,
+	getLoanDetails,
 };
