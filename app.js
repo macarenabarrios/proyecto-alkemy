@@ -6,6 +6,7 @@ import indexRouter from './src/routes/index.route.js'
 import seed from './src/db/seed.db.js';
 import errorHandler from './src/middleware/error.middleware.js';
 import http from 'http';
+import { dueReminder } from './src/utils/cron.util.js';
 import { extractAuthenticated } from './src/middleware/extract-authenticated.middleware.js';
 import { configureSocketIO } from './src/notifications/notification.service.js';
 
@@ -80,5 +81,6 @@ app.use((req, res, next) => {
 });
 
 app.use(errorHandler);
+dueReminder()
 
 export default app;
