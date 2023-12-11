@@ -18,7 +18,7 @@ export const authenticate = async (email, password) => {
 		const response = await generateToken(user);
 		console.log(response);
 		try {
-			recordUserAction(Actions.SIGN_IN_USER,user.id)
+			recordUserAction(Actions.SIGN_IN_USER, user.id)
 		} catch (error) {
 			throw error
 		}
@@ -39,7 +39,7 @@ export const register = async (user) => {
 		console.log(newUser)
 		const response = await generateToken(newUser);
 		try {
-			recordUserAction(Actions.REGISTER_USER,newUser.id)
+			recordUserAction(Actions.REGISTER_USER, newUser.id)
 		} catch (error) {
 			throw error
 		}

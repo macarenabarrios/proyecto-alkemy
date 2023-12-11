@@ -85,7 +85,7 @@ const create = async (loan) => {
 						loanDate: newLoan.startDate,
 						dueDate: newLoan.dueDate,
 					});
-					recordUserAction(Actions.CREATE_LOAN,user.id)
+					recordUserAction(Actions.CREATE_LOAN, user.id)
 					return response;
 				} else {
 					response.error = "Usuario o libro no encontrado.";
@@ -135,7 +135,7 @@ const returnBook = async (userId, bookId) => {
 		})
 		book.save();
 		loanDb.save();
-		recordUserAction(Actions.RETURN_LOAN,user.id)
+		recordUserAction(Actions.RETURN_LOAN, user.id)
 	} catch (error) {
 		throw error;
 	}
