@@ -1,6 +1,10 @@
 import jwt from 'jsonwebtoken';
 
 export const extractAuthenticated = (req, res, next) => {
+	console.log(req.path)
+	if (req.path.startsWith('/auth/')) { //skipea el auth
+    return next();
+  }
 	let token = req.headers.authorization;
 	if (!token) throw new Error("Invalid Token");
 

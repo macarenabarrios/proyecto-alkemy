@@ -49,6 +49,26 @@ const findById = async (id) => {
   return response;
 };
 
+const findByUserId = async (id) => {
+  const response = await Loan.findAll({
+    include: [
+      {
+        model: Book,
+        attributes: ['id', 'title', 'description', 'isbn', 'edition', 'stock', 'image']
+      },
+      {
+        model: User,
+        attributes: ['id', 'email', 'membership_number']
+      }
+    ],
+    attributes: ['id', 'startDate', 'dueDate'],
+    where: {
+      userId: id
+    }
+  });
+  return response;
+};
+
 const update = async (id, loan) => {
   await Loan.update(loan, {
     where: {
@@ -107,6 +127,7 @@ export const loanRepository = {
   save,
   findAll,
   findById,
+  findByUserId,
   update,
   deleteById,
   countLoansByUserId,

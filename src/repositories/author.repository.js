@@ -35,8 +35,20 @@ const createAuthor = async (authorData) => {
   }
 };
 
+const findAuthorByProperties = async (searchObject) => {
+  try {
+    const response = await Author.findOne({
+      where: searchObject,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const authorRepository = {
   getAuthorById,
-  createAuthor,
   getAllAuthors,
+  createAuthor,
+  findAuthorByProperties
 };
