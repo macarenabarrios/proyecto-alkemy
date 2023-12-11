@@ -2,6 +2,7 @@ import { bookRepository } from '../repositories/book.repository.js';
 import { authorService } from './author.service.js';
 import { userService } from './user.service.js';
 import { sendNewNotification } from '../communications/email.service.js';
+import { notifyNewBookAvailable } from '../notifications/notification.service.js';
 
 const availableBooks = async (authorName, bookTitle) => {
 	try {
@@ -112,6 +113,9 @@ const newBook = async (book) => {
 		users.forEach(user => {
 			sendNewNotification(user.email, user.firstname, notificationData);
 		});
+
+		/** Emite un evento de nuevo libro disponible  **/
+		notifyNewBookAvailable(createdBook);
 
 		return createdBook;
 	} catch (error) {
