@@ -29,7 +29,7 @@ import './src/db/associations.db.js';
 const main = async () => {
   try {
 
-    await sequelize.sync({ alter: true, force: false });
+    await sequelize.sync();
 
     seed()
     console.log('Connection has been established successfully.');

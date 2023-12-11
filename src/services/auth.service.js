@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken';
 import { userService } from './user.service.js';
 import { roleService } from './role.service.js';
 import { comparePassword } from '../utils/hash.util.js';
-import { sendEmail } from './email.service.js';
-import welcomeMessage from '../config/messages/welcome.Message.js';
+import { sendEmail } from '../communications/email.service.js';
+import welcomeMessage from '../communications/messages/welcome.message.js';
 import { recordUserAction } from '../services/user-action-log.service.js';
 import Actions from '../utils/constants/actions.js';
 
