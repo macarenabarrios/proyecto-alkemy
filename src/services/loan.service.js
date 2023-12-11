@@ -2,7 +2,7 @@ import Book from '../db/models/book.model.js';
 import EntityNotFoundError from '../exceptions/EntityNotFoundError.js';
 import { loanRepository } from '../repositories/loan.repository.js';
 import { userRepository } from '../repositories/user.repository.js';
-import { sendLoanNotification } from './email.service.js';
+import { sendLoanNotification } from '../communications/email.service.js';
 import { recordUserAction } from '../services/user-action-log.service.js';
 import Actions from '../utils/constants/actions.js';
 
@@ -85,7 +85,7 @@ const create = async (loan) => {
 						loanDate: newLoan.startDate,
 						dueDate: newLoan.dueDate,
 					});
-					recordUserAction(Actions.CREATE_LOAN,user.id)
+					recordUserAction(Actions.CREATE_LOAN, user.id)
 					return response;
 				} else {
 					response.error = "Usuario o libro no encontrado.";
@@ -135,7 +135,7 @@ const returnBook = async (userId, bookId) => {
 		})
 		book.save();
 		loanDb.save();
-		recordUserAction(Actions.RETURN_LOAN,user.id)
+		recordUserAction(Actions.RETURN_LOAN, user.id)
 	} catch (error) {
 		throw error;
 	}
