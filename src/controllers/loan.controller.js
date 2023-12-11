@@ -152,6 +152,20 @@ const returnBook = (req, res, next) => {
     })
 };
 
+const getLoanDetails = async (req, res, next) => {
+  const id = req.params.id;
+
+  try {
+    const loanDetails = await loanService.getLoanDetails(id);
+    res.json(loanDetails);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error getting loan details' });
+    next(error);
+  }
+};
+
+
 export {
   getAll,
   getById,
@@ -160,5 +174,6 @@ export {
   update,
   deleteLoan,
   deleteAllLoans,
-  returnBook
+  returnBook,
+  getLoanDetails,
 };

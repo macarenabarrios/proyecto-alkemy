@@ -27,7 +27,9 @@ import './src/db/associations.db.js';
 // Conexion y generacion de la base de datos
 const main = async () => {
   try {
+
     await sequelize.sync({ alter: true, force: false });
+
     seed()
     console.log('Connection has been established successfully.');
   } catch (error) {
@@ -56,6 +58,10 @@ app.get('/', (req, res) => {
 });
 
 const PORT = process.env.PORT || 8080;
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors());
+app.use('/api', indexRouter);
 
 server.listen(PORT, () => {
   console.log(`app listening on port ${PORT}!`);
