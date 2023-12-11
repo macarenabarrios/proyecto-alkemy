@@ -29,7 +29,7 @@ import './src/db/associations.db.js';
 const main = async () => {
   try {
 
-    await sequelize.sync({ alter: true, force: false });
+    await sequelize.sync();
 
     seed()
     console.log('Connection has been established successfully.');
@@ -62,16 +62,11 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
-app.use('/api', indexRouter);
+app.use('/api', extractAuthenticated, indexRouter);
 
 server.listen(PORT, () => {
   console.log(`app listening on port ${PORT}!`);
 });
-
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors());
-app.use('/api', extractAuthenticated, indexRouter);
 
 // Middleware para manejar errores 404
 app.use((req, res, next) => {

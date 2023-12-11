@@ -11,6 +11,7 @@ const transporter = nodemailer.createTransport({
 	},
 });
 
+
 const createMailOptions = (to, subject, text) => {
 	return {
 		from: process.env.GMAIL_USER,
