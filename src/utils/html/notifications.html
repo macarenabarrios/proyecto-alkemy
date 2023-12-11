@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebSocket Notifications</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+      }
+
+      #notifications-container {
+        list-style: none;
+        padding: 0;
+        width: 300px;
+      }
+
+      .notification {
+        background-color: #3498db;
+        color: #fff;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.3s ease;
+      }
+
+      .notification:hover {
+        background-color: #2980b9;
+      }
+
+      .notification-title {
+        font-weight: bold;
+      }
+
+      .notification-close {
+        cursor: pointer;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>WebSocket Notifications</h1>
+    <ul id="notifications-container"></ul>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      socket.on("libroDisponible", (detalleLibro) => {
+        const notificationsContainer = document.getElementById(
+          "notifications-container"
+        );
+        const notificationItem = document.createElement("li");
+        notificationItem.classList.add("notification");
+
+        const titleElement = document.createElement("span");
+        titleElement.classList.add("notification-title");
+        titleElement.textContent = `Nuevo libro disponible: ${detalleLibro.title}`;
+
+        const closeElement = document.createElement("span");
+        closeElement.classList.add("notification-close");
+        closeElement.textContent = "x";
+        closeElement.addEventListener("click", () => {
+          notificationItem.remove();
+        });
+
+        notificationItem.appendChild(titleElement);
+        notificationItem.appendChild(closeElement);
+
+        notificationsContainer.appendChild(notificationItem);
+      });
+    </script>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
-import newLoanMessage from '../config/messages/newLoan.Message.js';
-import newDueLoanMessage from '../config/messages/dueLoan.message.js';
+import newDueLoanMessage from '../communications/messages/dueLoan.message.js';
+import newLoanMessage from '../communications/messages/newLoan.message.js';
 
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
