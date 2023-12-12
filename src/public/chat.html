@@ -50,8 +50,14 @@
         <input
           type="text"
           class="form-control"
+          id="name-input"
+          placeholder="Your name"
+        />
+        <input
+          type="text"
+          class="form-control"
           id="message-input"
-          placeholder="Escribe tu mensaje..."
+          placeholder="Type your message.."
         />
         <div class="input-group-append">
           <button class="btn btn-primary" type="button" onclick="sendMessage()">
@@ -63,6 +69,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.socket.io/4.1.2/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
 
     <script>
       let socket;
@@ -83,7 +90,7 @@
               messageDiv.className = "message-container-received";
               messageDiv.innerHTML = `
                 <div class="received-message" style="background-color: ${userColor}">
-                  ${message.text}
+                  <strong>${message.sender}:</strong> ${message.text}
                 </div>
               `;
               messageContainer.appendChild(messageDiv);
@@ -93,10 +100,15 @@
       });
 
       function sendMessage() {
+        const name = $("#name-input").val();
         const messageText = $("#message-input").val();
+        if (name.trim() === "") {
+          alert("Please enter your name");
+          return;
+        }
         if (messageText.trim() !== "") {
-          currentUser = Math.random().toString(36).substring(2, 15);
-          console.log("Quien envía al server ", currentUser);
+          currentUser = name;
+          console.log("Quien envía al servidor ", currentUser);
 
           socket.emit("chat message", {
             text: messageText,
@@ -109,12 +121,14 @@
           messageDiv.className = "message-container-sent";
           messageDiv.innerHTML = `
             <div class="sent-message" style="background-color: ${userColor}">
-              ${messageText}
+              <strong>${currentUser}:</strong> ${messageText}
             </div>
           `;
           messageContainer.appendChild(messageDiv);
 
           $("#message-input").val("");
+        } else {
+          alert("Message cannot be empty.");
         }
       }
 
