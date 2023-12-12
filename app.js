@@ -1,4 +1,5 @@
 import express from 'express';
+import compression from 'compression';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -41,6 +42,15 @@ const main = async () => {
 main();
 
 const app = express();
+
+
+// Middleware de compresión
+app.use(compression({
+  filter: (req, res) => {
+    // Detección del tipo de contenido compatible
+    return /json|text|html|xml|rss|css|javascript|svg/.test(res.getHeader('Content-Type'));
+  },
+}));
 
 // Configuración Socket.IO
 import { fileURLToPath } from 'url';
