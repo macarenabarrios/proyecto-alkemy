@@ -58,7 +58,7 @@
     <script>
       const socket = io();
 
-      socket.on("libroDisponible", (detalleLibro) => {
+      socket.on("bookAvailable", (bookDetail) => {
         const notificationsContainer = document.getElementById(
           "notifications-container"
         );
@@ -67,7 +67,7 @@
 
         const titleElement = document.createElement("span");
         titleElement.classList.add("notification-title");
-        titleElement.textContent = `Nuevo libro disponible: ${detalleLibro.title}`;
+        titleElement.textContent = `Nuevo libro disponible: ${bookDetail.title}`;
 
         const closeElement = document.createElement("span");
         closeElement.classList.add("notification-close");

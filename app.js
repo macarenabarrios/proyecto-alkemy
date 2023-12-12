@@ -5,7 +5,6 @@ import cookieParser from 'cookie-parser';
 import indexRouter from './src/routes/index.route.js'
 import seed from './src/db/seed.db.js';
 import errorHandler from './src/middleware/error.middleware.js';
-import http from 'http';
 import { extractAuthenticated } from './src/middleware/extract-authenticated.middleware.js';
 import { configureSocketIO } from './src/notifications/notification.service.js';
 
@@ -27,9 +26,7 @@ import './src/db/associations.db.js';
 // Conexion y generacion de la base de datos
 const main = async () => {
   try {
-
     await sequelize.sync({ alter: true, force: false });
-
     seed()
     console.log('Connection has been established successfully.');
   } catch (error) {
@@ -42,6 +39,7 @@ main();
 const app = express();
 
 // Configuración Socket.IO
+import http from 'http';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
@@ -52,7 +50,7 @@ configureSocketIO(server);
 // Ruta de notificaciones
 import path from 'path';
 app.get('/', (req, res) => {
-  const filePath = path.join(__dirname, 'src', 'utils', 'html', 'notifications.html');
+  const filePath = path.join(__dirname, 'src', 'public', 'notifications.html');
   console.log("Ruta completa:", filePath);
   res.sendFile(filePath);
 });

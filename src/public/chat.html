@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <style>
+      .message-container-sent {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 5px;
+      }
+
+      .sent-message {
+        border-radius: 10px;
+        padding: 10px;
+        width: 30%;
+        word-wrap: break-word;
+      }
+
+      .message-container-received {
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 5px;
+      }
+      .received-message {
+        border-radius: 10px;
+        padding: 10px;
+        width: 30%;
+        word-wrap: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="card">
+        <div
+          class="card-body"
+          style="height: 300px; overflow-y: auto"
+          id="chat-messages"
+        ></div>
+      </div>
+      <div class="input-group mt-3">
+        <input
+          type="text"
+          class="form-control"
+          id="message-input"
+          placeholder="Escribe tu mensaje..."
+        />
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="button" onclick="sendMessage()">
+            Enviar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.socket.io/4.1.2/socket.io.min.js"></script>
+
+    <script>
+      let socket;
+      let currentUser;
+      let userColors = {};
+
+      document.addEventListener("DOMContentLoaded", function () {
+        socket = io();
+
+        socket.on("chat message", function (message) {
+          if (message && message.sender && message.text) {
+            const isSentByCurrentUser = message.sender === currentUser;
+
+            if (!isSentByCurrentUser) {
+              const userColor = getUserColor(message.sender);
+              const messageContainer = document.getElementById("chat-messages");
+              const messageDiv = document.createElement("div");
+              messageDiv.className = "message-container-received";
+              messageDiv.innerHTML = `
+                <div class="received-message" style="background-color: ${userColor}">
+                  ${message.text}
+                </div>
+              `;
+              messageContainer.appendChild(messageDiv);
+            }
+          }
+        });
+      });
+
+      function sendMessage() {
+        const messageText = $("#message-input").val();
+        if (messageText.trim() !== "") {
+          currentUser = Math.random().toString(36).substring(2, 15);
+          console.log("Quien envía al server ", currentUser);
+
+          socket.emit("chat message", {
+            text: messageText,
+            sender: currentUser,
+          });
+
+          const userColor = getUserColor(currentUser);
+          const messageContainer = document.getElementById("chat-messages");
+          const messageDiv = document.createElement("div");
+          messageDiv.className = "message-container-sent";
+          messageDiv.innerHTML = `
+            <div class="sent-message" style="background-color: ${userColor}">
+              ${messageText}
+            </div>
+          `;
+          messageContainer.appendChild(messageDiv);
+
+          $("#message-input").val("");
+        }
+      }
+
+      function getUserColor(user) {
+        if (!userColors[user]) {
+          userColors[user] = getRandomColor();
+        }
+        return userColors[user];
+      }
+
+      function getRandomColor() {
+        const minColorValue = 50;
+        const maxColorValue = 200;
+
+        const getRandomValue = () =>
+          Math.floor(
+            Math.random() * (maxColorValue - minColorValue + 1) + minColorValue
+          );
+
+        const red = getRandomValue();
+        const green = getRandomValue();
+        const blue = getRandomValue();
+
+        return `rgb(${red}, ${green}, ${blue})`;
+      }
+    </script>
+  </body>
+</html>
