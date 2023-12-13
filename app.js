@@ -23,7 +23,6 @@ import './src/db/models/role.model.js';
 import './src/db/models/loan.model.js';
 import './src/db/models/publisher.model.js';
 import './src/db/models/review.model.js';
-import './src/db/models/user-action-log.model.js';
 import './src/db/associations.db.js';
 
 // Conexion y generacion de la base de datos

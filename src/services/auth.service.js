@@ -2,10 +2,8 @@ import jwt from 'jsonwebtoken';
 import { userService } from './user.service.js';
 import { roleService } from './role.service.js';
 import { comparePassword } from '../utils/hash.util.js';
-import { sendEmail } from '../communications/email.service.js';
-import welcomeMessage from '../communications/messages/welcome.message.js';
-import { recordUserAction } from '../services/user-action-log.service.js';
-import Actions from '../utils/constants/actions.js';
+import { sendEmail } from './email.service.js';
+import welcomeMessage from '../config/messages/welcome.Message.js';
 
 
 export const authenticate = async (email, password) => {
@@ -16,12 +14,6 @@ export const authenticate = async (email, password) => {
 		if (!validPassword) throw new Error("Bad credentials");
 		if (!user.isActive) throw new Error("Confirm your account");
 		const response = await generateToken(user);
-		console.log(response);
-		try {
-			recordUserAction(Actions.SIGN_IN_USER, user.id)
-		} catch (error) {
-			throw error
-		}
 		return response;
 	} catch (error) {
 		throw error;
@@ -38,11 +30,6 @@ export const register = async (user) => {
 		console.log("Usuario registrado exitosamente");
 		console.log(newUser)
 		const response = await generateToken(newUser);
-		try {
-			recordUserAction(Actions.REGISTER_USER, newUser.id)
-		} catch (error) {
-			throw error
-		}
 		return response;
 	} catch (error) {
 		throw error;

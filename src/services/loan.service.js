@@ -2,9 +2,7 @@ import Book from '../db/models/book.model.js';
 import EntityNotFoundError from '../exceptions/EntityNotFoundError.js';
 import { loanRepository } from '../repositories/loan.repository.js';
 import { userRepository } from '../repositories/user.repository.js';
-import { sendLoanNotification } from '../communications/email.service.js';
-import { recordUserAction } from '../services/user-action-log.service.js';
-import Actions from '../utils/constants/actions.js';
+import { sendLoanNotification } from './email.service.js';
 
 const getAll = async () => {
 	const response = await loanRepository.findAll();
@@ -135,7 +133,6 @@ const returnBook = async (userId, bookId) => {
 		})
 		book.save();
 		loanDb.save();
-		recordUserAction(Actions.RETURN_LOAN, user.id)
 	} catch (error) {
 		throw error;
 	}
