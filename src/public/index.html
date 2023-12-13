@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App with Notifications</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <style>
+        body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: #f4f4f4;
+      }
+
+      .navbar {
+        background-color: #3498db;
+        color: #fff;
+        padding: 15px;
+        text-align: center;
+      }
+
+      .chat-container {
+        flex: 1;
+        margin-right: 20px;
+        margin-top: 50px;
+      }
+
+      .notification-container {
+        width: 300px;
+        background-color: #3498db;
+        color: #fff;
+        padding: 15px;
+        border-radius: 0 10px 10px 0;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 50px;
+      }
+
+      #notifications-container {
+        list-style: none;
+        padding: 0;
+        width: 100%;
+      }
+
+      .notification {
+        background-color: #2980b9;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.3s ease;
+      }
+
+      .notification:hover {
+        background-color: #1f678b;
+      }
+
+      .notification-title {
+        font-weight: bold;
+      }
+
+      .notification-close {
+        cursor: pointer;
+        font-size: 18px;
+      }
+
+      .message-container-sent {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 5px;
+      }
+
+      .sent-message {
+        border-radius: 10px;
+        padding: 10px;
+        width: 80%;
+        word-wrap: break-word;
+      }
+
+      .message-container-received {
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 5px;
+      }
+      .received-message {
+        border-radius: 10px;
+        padding: 10px;
+        width: 80%;
+        word-wrap: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+      <a class="navbar-brand" href="http://192.168.0.3:3000/api/index">
+        ALKEMY TRACK4
+      </a>
+    </nav>
+
+    <div class="container mt-5">
+      <div class="row">
+        <div class="chat-container">
+          <div class="card">
+            <div
+              class="card-body"
+              style="height: 300px; overflow-y: auto"
+              id="chat-messages"
+            ></div>
+          </div>
+          <div class="input-group mt-3">
+            <input
+              type="text"
+              class="form-control"
+              id="name-input"
+              placeholder="Your name"
+            />
+            <input
+              type="text"
+              class="form-control"
+              id="message-input"
+              placeholder="Type your message.."
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-primary"
+                type="button"
+                onclick="sendMessage()"
+              >
+                Enviar
+              </button>
+            </div>
+          </div>
+        </div>
+
+      <div class="notification-container">
+        <h1>WebSocket Notifications</h1>
+        <ul id="notifications-container"></ul>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.socket.io/4.1.2/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
+
+    <script>
+      let socket;
+      let currentUser;
+      let userColors = {};
+
+      document.addEventListener("DOMContentLoaded", function () {
+        socket = io();
+
+        socket.on("chat message", function (message) {
+          if (message && message.sender && message.text) {
+            const isSentByCurrentUser = message.sender === currentUser;
+
+            if (!isSentByCurrentUser) {
+              const userColor = getUserColor(message.sender);
+              const messageContainer = document.getElementById("chat-messages");
+              const messageDiv = document.createElement("div");
+              messageDiv.className = "message-container-received";
+              messageDiv.innerHTML = `
+                <div class="received-message" style="background-color: ${userColor}">
+                  <strong>${message.sender}:</strong> ${message.text}
+                </div>
+              `;
+              messageContainer.appendChild(messageDiv);
+            }
+          }
+        });
+
+        socket.on("bookAvailable", (bookDetail) => {
+          const notificationsContainer = document.getElementById(
+            "notifications-container"
+          );
+          const notificationItem = document.createElement("li");
+          notificationItem.classList.add("notification");
+
+          const titleElement = document.createElement("span");
+          titleElement.classList.add("notification-title");
+          titleElement.textContent = `Nuevo libro disponible: ${bookDetail.title}`;
+
+          const closeElement = document.createElement("span");
+          closeElement.classList.add("notification-close");
+          closeElement.textContent = "x";
+          closeElement.addEventListener("click", () => {
+            notificationItem.remove();
+          });
+
+          notificationItem.appendChild(titleElement);
+          notificationItem.appendChild(closeElement);
+
+          notificationsContainer.appendChild(notificationItem);
+        });
+      });
+
+      function sendMessage() {
+        const name = $("#name-input").val();
+        const messageText = $("#message-input").val();
+        if (name.trim() === "") {
+          alert("Please enter your name");
+          return;
+        }
+        if (messageText.trim() !== "") {
+          currentUser = name;
+          console.log("Sender to server: ", currentUser);
+
+          socket.emit("chat message", {
+            text: messageText,
+            sender: currentUser,
+          });
+
+          const userColor = getUserColor(currentUser);
+          const messageContainer = document.getElementById("chat-messages");
+          const messageDiv = document.createElement("div");
+          messageDiv.className = "message-container-sent";
+          messageDiv.innerHTML = `
+            <div class="sent-message" style="background-color: ${userColor}">
+              <strong>${currentUser}:</strong> ${messageText}
+            </div>
+          `;
+          messageContainer.appendChild(messageDiv);
+
+          $("#message-input").val("");
+        } else {
+          alert("Message cannot be empty.");
+        }
+      }
+
+      function getUserColor(user) {
+        if (!userColors[user]) {
+          userColors[user] = getRandomColor();
+        }
+        return userColors[user];
+      }
+
+      function getRandomColor() {
+        const minColorValue = 50;
+        const maxColorValue = 200;
+
+        const getRandomValue = () =>
+          Math.floor(
+            Math.random() * (maxColorValue - minColorValue + 1) + minColorValue
+          );
+
+        const red = getRandomValue();
+        const green = getRandomValue();
+        const blue = getRandomValue();
+
+        return `rgb(${red}, ${green}, ${blue})`;
+      }
+    </script>
+  </body>
+</html>
