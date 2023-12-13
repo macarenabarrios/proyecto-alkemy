@@ -79,9 +79,17 @@ const newReview = async (review) => {
 		if (!user) {
 			throw new Error(`User with id ${review.userId} not found`);
 		}
-		review.bookId = book.id;
-		review.userId = user.id;
 		const createdReview = await Review.create(review);
+		const bookReviews= await getByBook(review.bookId)
+		let total= 0 
+		bookReviews.forEach(element => {
+			total += element.dataValues.score
+		})
+		const avg = total/bookReviews.length
+		const updateAverage = await Book.update(
+			{average:avg },
+			{where: {id :review.bookId }}
+		)
 		return createdReview;
 	} catch (error) {
 		throw new Error(`Error creating review: ${error.message}`);
