@@ -50,7 +50,7 @@ configureSocketIO(server);
 // Ruta de notificaciones
 import path from 'path';
 app.get('/', (req, res) => {
-  const filePath = path.join(__dirname, 'src', 'public', 'notifications.html');
+  const filePath = path.join(__dirname, 'src', 'public', 'index.html');
   console.log("Ruta completa:", filePath);
   res.sendFile(filePath);
 });

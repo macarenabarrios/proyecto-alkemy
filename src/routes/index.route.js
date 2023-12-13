@@ -24,10 +24,10 @@ router.use('/publisher', hasAnyRole(["ADMIN", "USER"]), publisherRouter);
 router.use('/review', hasAnyRole(["ADMIN", "USER"]), reviewRouter);
 router.use('/users', userRouter);
 
-router.use('/chat', (req, res) => {
+router.use('/index', (req, res) => {
 	const currentModulePath = fileURLToPath(import.meta.url);
 	const currentDirPath = dirname(currentModulePath);
-	const chatFilePath = path.resolve(currentDirPath, '../public/chat.html');
+	const chatFilePath = path.resolve(currentDirPath, '../public/index.html');
 	res.sendFile(chatFilePath);
 });
 
