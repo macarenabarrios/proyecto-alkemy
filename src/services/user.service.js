@@ -1,8 +1,6 @@
 import { roleRepository } from '../repositories/role.repository.js';
 import { userRepository } from '../repositories/user.repository.js';
 import { hashPassword } from '../utils/hash.util.js';
-import { recordUserAction } from '../services/user-action-log.service.js';
-import Actions from '../utils/constants/actions.js';
 
 const getAll = async (page,size,firstname,lastname,email) => {
   const response = await userRepository.findAll(page,size,firstname,lastname,email);

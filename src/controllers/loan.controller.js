@@ -61,6 +61,10 @@ const save = async (req, res, next) => {
           availableLoans: response?.availableLoans
         }
       )
+      logAction(
+        req,
+        `Usuario ${req.body.email} solicito un prestamo`
+      );
     }
     else {
       res.status(500).json(

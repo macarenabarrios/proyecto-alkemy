@@ -7,7 +7,6 @@ import Author from './models/author.model.js';
 import Review from './models/review.model.js';
 import Category from './models/category.model.js';
 import BookCategory from './models/bookCategory.model.js';
-import LogAction from './models/user-action-log.model.js';
 
 // Un usuario tiene un rol; un rol tiene mas de un usuario
 Role.hasMany(User, { foreignKey: { name: "roleId", field: "role_id" } });
@@ -44,7 +43,3 @@ Loan.belongsTo(Book, { foreignKey: { name: "bookId", field: "book_id" } });
 //  Relación entre Category y Book a través de BookCategory (muchos a muchoss)
 Category.belongsToMany(Book, { through: BookCategory, foreignKey: { name: "categoryId", field: "category_id" } });
 Book.belongsToMany(Category, { through: BookCategory, foreignKey: { name: "bookId", field: "book_id" } });
-
-// Logs por usuarios unidireccional
-User.hasMany(LogAction,{ foreignKey: { name: "userId", field: "user_id" } })
-// User.belongsToMany(LogAction,{ foreignKey: { name: "userId", field: "user_id" } })
