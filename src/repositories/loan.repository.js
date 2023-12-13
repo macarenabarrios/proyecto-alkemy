@@ -1,6 +1,7 @@
 import User from '../db/models/user.model.js';
 import Loan from '../db/models/loan.model.js';
 import Book from '../db/models/book.model.js';
+import { Op } from 'sequelize';
 
 const save = async (loan) => {
   const newLoan = await Loan.create(await loan);
@@ -29,6 +30,43 @@ const findAll = async () => {
   }
 };
 
+const getDueDateAllLoans = async (date) => {
+  // date.setUTCHours(0, 0, 0, 0);
+  const startOfDay = new Date(date);
+  startOfDay.setUTCHours(0, 0, 0, 0);
+
+  const endOfDay = new Date(date);
+  endOfDay.setUTCHours(23, 59, 59, 999);
+  try {
+    const response = await Loan.findAll({
+      include: [
+        {
+          model: Book,
+          attributes: ['id', 'title', 'description', 'isbn', 'edition', 'stock', 'image']
+        },
+        {
+          model: User,
+          attributes: ['id', 'email', 'firstname', 'lastname', 'membership_number']
+        }
+      ],
+      attributes: ['id', 'startDate', 'dueDate'],
+      where: {
+        dueDate: {
+          [Op.between]: [startOfDay, endOfDay]
+        }
+      }
+    });
+
+    return response;
+
+  } catch (error) {
+
+    console.error("Error de Sequelize:", error.message);
+    console.error("Error detallado:", error);
+
+  }
+};
+
 const findById = async (id) => {
   const response = await Loan.findOne({
     include: [
@@ -44,6 +82,26 @@ const findById = async (id) => {
     attributes: ['id', 'startDate', 'dueDate'],
     where: {
       id: id
+    }
+  });
+  return response;
+};
+
+const findByUserId = async (id) => {
+  const response = await Loan.findAll({
+    include: [
+      {
+        model: Book,
+        attributes: ['id', 'title', 'description', 'isbn', 'edition', 'stock', 'image']
+      },
+      {
+        model: User,
+        attributes: ['id', 'email', 'membership_number']
+      }
+    ],
+    attributes: ['id', 'startDate', 'dueDate'],
+    where: {
+      userId: id
     }
   });
   return response;
@@ -107,9 +165,11 @@ export const loanRepository = {
   save,
   findAll,
   findById,
+  findByUserId,
   update,
   deleteById,
   countLoansByUserId,
   deleteAllByUserId,
-  findByUserIdAndBookId
+  findByUserIdAndBookId,
+  getDueDateAllLoans
 };

@@ -17,6 +17,15 @@ const getById = async (id) => {
 	return loan;
 };
 
+
+const getByUserId = async (id) => {
+	const loan = await loanRepository.findByUserId(id);
+	if (!loan) {
+		throw new EntityNotFoundError(`Loan doesn't exist with id ${id}`);
+	}
+	return loan;
+};
+
 const create = async (loan) => {
 	let response = {
 		data: null,
@@ -74,7 +83,7 @@ const create = async (loan) => {
 						loanDate: newLoan.startDate,
 						dueDate: newLoan.dueDate,
 					});
-					recordUserAction(Actions.CREATE_LOAN,user.id)
+					recordUserAction(Actions.CREATE_LOAN, user.id)
 					return response;
 				} else {
 					response.error = "Usuario o libro no encontrado.";
@@ -129,12 +138,33 @@ const returnBook = async (userId, bookId) => {
 	}
 };
 
+const getLoanDetails = async (id) => {
+  try {
+    const loan = await loanRepository.findById(id);
+    if (!loan) {
+      throw new Error('Loan not found');
+    }
+
+    return {
+      loanId: loan.id,
+      startDate: loan.startDate,
+      dueDate: loan.dueDate,
+      returned: loan.returned,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 export const loanService = {
 	create,
 	getAll,
 	getById,
+	getByUserId,
 	update,
 	deleteLoan,
 	deleteAllLoans,
 	returnBook,
+	getLoanDetails,
 };

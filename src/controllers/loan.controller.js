@@ -47,6 +47,29 @@ const getById = async (req, res, next) => {
   }
 };
 
+const getByUserId = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const response = await loanService.getByUserId(id);
+    res.status(200).json(
+      {
+        success: true,
+        message: `Se recuperaron los prestamos del usuario con id #${id} satisfactoriamente.`,
+        data: response,
+      }
+    )
+  } catch (error) {
+    res.status(500).json(
+      {
+        success: false,
+        message: `Error al recuperar el prestamo con id #${id}.`,
+        error: error.message
+      }
+    );
+    next(error)
+  }
+};
+
 const save = async (req, res, next) => {
   const newLoan = req.body;
   try {
@@ -133,12 +156,28 @@ const returnBook = (req, res, next) => {
     })
 };
 
+const getLoanDetails = async (req, res, next) => {
+  const id = req.params.id;
+
+  try {
+    const loanDetails = await loanService.getLoanDetails(id);
+    res.json(loanDetails);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error getting loan details' });
+    next(error);
+  }
+};
+
+
 export {
   getAll,
   getById,
+  getByUserId,
   save,
   update,
   deleteLoan,
   deleteAllLoans,
-  returnBook
+  returnBook,
+  getLoanDetails,
 };
