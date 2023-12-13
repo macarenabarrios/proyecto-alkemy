@@ -4,9 +4,16 @@ import { userService } from './user.service.js';
 import { sendNewNotification } from '../communications/email.service.js';
 import { notifyNewBookAvailable } from '../notifications/notification.service.js';
 
-const availableBooks = async (authorName, bookTitle) => {
+const availableBooks = async (authorName, bookTitle, categoryName, page) => {
 	try {
-		const books = await bookRepository.availableBooks(authorName, bookTitle);
+		let options ={}
+		if (page && !isNaN (page)){
+			options={
+				offset: (page - 1) * 10,
+				limit: 10
+			}
+		}
+		const books = await bookRepository.availableBooks(authorName, bookTitle,categoryName,options);
 		return books;
 	} catch (error) {
 		throw new Error(`Error en el servicio al obtener libros disponibles: ${error.message}`);

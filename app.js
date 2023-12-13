@@ -1,10 +1,12 @@
 import express from 'express';
+import compression from 'compression';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import indexRouter from './src/routes/index.route.js'
 import seed from './src/db/seed.db.js';
 import errorHandler from './src/middleware/error.middleware.js';
+import { dueReminder } from './src/utils/cron.util.js';
 import { extractAuthenticated } from './src/middleware/extract-authenticated.middleware.js';
 import { configureSocketIO } from './src/notifications/notification.service.js';
 
@@ -20,7 +22,6 @@ import './src/db/models/role.model.js';
 import './src/db/models/loan.model.js';
 import './src/db/models/publisher.model.js';
 import './src/db/models/review.model.js';
-import './src/db/models/user-action-log.model.js';
 import './src/db/associations.db.js';
 
 // Conexion y generacion de la base de datos
@@ -37,6 +38,14 @@ const main = async () => {
 main();
 
 const app = express();
+
+// Middleware de compresión
+app.use(compression({
+  filter: (req, res) => {
+    // Detección del tipo de contenido compatible
+    return /json|text|html|xml|rss|css|javascript|svg/.test(res.getHeader('Content-Type'));
+  },
+}));
 
 // Configuración Socket.IO
 import http from 'http';
@@ -59,16 +68,11 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
-app.use('/api', indexRouter);
+app.use('/api', extractAuthenticated, indexRouter);
 
 server.listen(PORT, () => {
   console.log(`app listening on port ${PORT}!`);
 });
-
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors());
-app.use('/api', extractAuthenticated, indexRouter);
 
 // Middleware para manejar errores 404
 app.use((req, res, next) => {
@@ -78,5 +82,6 @@ app.use((req, res, next) => {
 });
 
 app.use(errorHandler);
+dueReminder()
 
 export default app;

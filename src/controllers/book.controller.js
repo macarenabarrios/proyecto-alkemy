@@ -1,7 +1,7 @@
 import { bookService } from '../services/book.service.js';
 
 const availableBooks = async (req, res, next) => {
-	bookService.availableBooks(req.query["authorName"], req.query["bookTitle"])
+	bookService.availableBooks(req.query["authorName"], req.query["bookTitle"],req.query["categoryName"],req.query["page"])
 		.then((response) => {
 			res.status(200).json(response);
 		})
