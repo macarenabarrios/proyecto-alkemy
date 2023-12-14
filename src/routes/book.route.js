@@ -11,5 +11,6 @@ router.post('', validateBookData, bookController.newBook);
 router.put('/:id', bookController.update);
 router.delete('/:id', bookController.deleteBook);
 router.get('/author-title', bookController.getByAuthorOrTitle);
+router.get('/export-csv', bookController.exportCSV);
 
 export default router;

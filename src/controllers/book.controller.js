@@ -76,6 +76,19 @@ const getByAuthorOrTitle = (req, res, next) => {
 			next(err)
 		});
 };
+
+const exportCSV= async(req,res,next)=> {
+	bookService.exportCSV()
+	.then((response) => {
+		res.status(200).json(response)
+	})
+	.catch((err) => {
+		console.log(err);
+		res.status(500).json({ error: err.message });
+		next(err)
+	});
+}
+
 export const bookController = {
 	availableBooks,
 	deleteBook,
@@ -83,5 +96,6 @@ export const bookController = {
 	getById,
 	newBook,
 	update,
-	getByAuthorOrTitle
+	getByAuthorOrTitle,
+	exportCSV
 };

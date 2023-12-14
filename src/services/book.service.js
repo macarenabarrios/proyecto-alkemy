@@ -3,6 +3,7 @@ import { authorService } from './author.service.js';
 import { userService } from './user.service.js';
 import { sendNewNotification } from '../communications/email.service.js';
 import { notifyNewBookAvailable } from '../notifications/notification.service.js';
+import { createObjectCsvWriter } from 'csv-writer';
 
 const availableBooks = async (authorName, bookTitle, categoryName, page) => {
 	try {
@@ -143,6 +144,20 @@ const getByAuthorOrTitle = async (authorId, title) => {
 	return await bookRepository.getByAuthorOrTitle(authorId, title);
 };
 
+const exportCSV= async () => {
+	const book= await bookRepository.getAll ()
+	const csvWriter= createObjectCsvWriter({
+	path: "prueba.csv",
+	header: [
+		{id:"title",name:"Title"},
+		{id:"description",name:"Description"},
+		{id:"isbn",name:"Isbn"},
+	]
+	})
+	await csvWriter.writeRecords(book)
+	console.log("Exportando Csv")
+}
+
 export const bookService = {
 	availableBooks,
 	deleteBook,
@@ -150,5 +165,6 @@ export const bookService = {
 	getById,
 	newBook,
 	update,
-	getByAuthorOrTitle
+	getByAuthorOrTitle,
+	exportCSV
 };
