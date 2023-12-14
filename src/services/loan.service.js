@@ -35,12 +35,11 @@ const create = async (loan) => {
 
 	try {
 		let data = null;
-
-		if (loan?.email && loan?.isbn && loan?.dueDate) {
+		if (loan?.email && loan?.isbn) {
 			data = {
 				email: loan.email,
 				isbn: loan.isbn,
-				dueDate: loan.dueDate,
+				dueDate: getDueDateIn(15),
 			};
 
 			const user = await userRepository.findByEmail(data.email);
@@ -83,7 +82,6 @@ const create = async (loan) => {
 						loanDate: newLoan.startDate,
 						dueDate: newLoan.dueDate,
 					});
-					recordUserAction(Actions.CREATE_LOAN, user.id)
 					return response;
 				} else {
 					response.error = "Usuario o libro no encontrado.";
@@ -156,6 +154,11 @@ const getLoanDetails = async (id) => {
   }
 };
 
+const getDueDateIn = (days) =>{
+	let dueDate = new Date();
+	dueDate.setDate(dueDate.getDate() + days);
+	return dueDate;
+}
 
 export const loanService = {
 	create,
