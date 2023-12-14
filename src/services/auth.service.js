@@ -3,7 +3,7 @@ import { userService } from './user.service.js';
 import { roleService } from './role.service.js';
 import { comparePassword } from '../utils/hash.util.js';
 import { sendEmail } from './email.service.js';
-import welcomeMessage from '../config/messages/welcome.Message.js';
+import welcomeMessage from '../communications/messages/welcome.message.js';
 
 
 export const authenticate = async (email, password) => {

@@ -26,7 +26,7 @@ const availableBooks = async (authorName = '', bookTitle = '', categoryName = ''
 		}
 
 		if (categoryName !== '') {
-			whereClause['$categorys.name$'] = {
+			whereClause['$categories.name$'] = {
 				[Op.like]: `%${categoryName}%`,
 			};
 		}
@@ -43,7 +43,7 @@ const availableBooks = async (authorName = '', bookTitle = '', categoryName = ''
 				},
 				{
 					model: Category,
-					as: 'categorys',
+					as: 'categories',
 					attributes: ['name'],
 					through: { attributes: [] },
 				},
