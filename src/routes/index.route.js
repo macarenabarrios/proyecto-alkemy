@@ -8,7 +8,8 @@ import publisherRouter from './publisher.route.js';
 import reviewRouter from './review.route.js';
 import userRouter from './user.route.js';
 import { hasAnyRole } from '../middleware/auth.middleware.js';
-import libraryRouter from './library.route.js'
+import libraryRouter from './library.route.js';
+import eventRouter from './event.route.js'
 
 
 import { fileURLToPath } from 'url';
@@ -25,6 +26,7 @@ router.use('/publisher', hasAnyRole(["ADMIN", "USER"]), publisherRouter);
 router.use('/review', hasAnyRole(["ADMIN", "USER"]), reviewRouter);
 router.use('/users', userRouter);
 router.use('/library', libraryRouter);
+router.use('/event', eventRouter);
 
 router.use('/index', (req, res) => {
 	const currentModulePath = fileURLToPath(import.meta.url);
