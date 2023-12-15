@@ -23,6 +23,8 @@ import './src/db/models/loan.model.js';
 import './src/db/models/publisher.model.js';
 import './src/db/models/review.model.js';
 import './src/db/associations.db.js';
+import './src/db/models/event.model.js'
+import './src/db/models/library.model.js'
 
 // Conexion y generacion de la base de datos
 const main = async () => {
