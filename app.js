@@ -27,6 +27,12 @@ import './src/db/associations.db.js';
 import './src/db/models/event.model.js'
 import './src/db/models/library.model.js'
 
+//Documentacion
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
+const swaggerDocs = YAML.load("./src/doc/swagger.doc.yaml");
+
+
 // Conexion y generacion de la base de datos
 const main = async () => {
   try {
@@ -61,6 +67,7 @@ configureSocketIO(server);
 
 // Ruta de notificaciones
 import path from 'path';
+import { availableParallelism } from 'os';
 app.get('/', (req, res) => {
   const filePath = path.join(__dirname, 'src', 'public', 'index.html');
   console.log("Ruta completa:", filePath);
@@ -72,7 +79,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 app.use('/api', extractAuthenticated, indexRouter);
-
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs, {explorer: true}));
 server.listen(PORT, () => {
   console.log(`app listening on port ${PORT}!`);
 });
