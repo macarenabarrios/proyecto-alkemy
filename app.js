@@ -9,7 +9,8 @@ import errorHandler from './src/middleware/error.middleware.js';
 import { dueReminder } from './src/utils/cron.util.js';
 import { extractAuthenticated } from './src/middleware/extract-authenticated.middleware.js';
 import { configureSocketIO } from './src/notifications/notification.service.js';
-
+import { dbBackup
+ } from './src/scheduled/backup.scheduled.js';
 dotenv.config();
 
 // Instancia de Sequelize
@@ -85,5 +86,6 @@ app.use((req, res, next) => {
 
 app.use(errorHandler);
 dueReminder()
+dbBackup();
 
 export default app;

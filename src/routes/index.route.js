@@ -10,7 +10,7 @@ import userRouter from './user.route.js';
 import { hasAnyRole } from '../middleware/auth.middleware.js';
 import libraryRouter from './library.route.js';
 import eventRouter from './event.route.js'
-
+import adminRouter from './admin.route.js'
 
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
@@ -27,6 +27,7 @@ router.use('/review', hasAnyRole(["ADMIN", "USER"]), reviewRouter);
 router.use('/users', userRouter);
 router.use('/library', libraryRouter);
 router.use('/event', eventRouter);
+router.use('/admin',hasAnyRole(["ADMIN"]), adminRouter);
 
 router.use('/index', (req, res) => {
 	const currentModulePath = fileURLToPath(import.meta.url);
