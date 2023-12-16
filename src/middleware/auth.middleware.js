@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import AuthorizationError from '../exceptions/AuthorizationError.js';
 
 export const hasAnyRole = (roles) => (req, res, next) => {
     let token = req.headers.authorization;
@@ -11,7 +12,7 @@ export const hasAnyRole = (roles) => (req, res, next) => {
         if (roles.includes(user.role)) {
             next();
         } else {
-            throw new Error("Unauthorized");
+            throw new AuthorizationError("Forbidden");
         }
     } catch (error) {
         throw error
