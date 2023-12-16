@@ -1,0 +1,27 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: Alkemy Library
+  description: Book management api
+  contact:
+    email: 
+
+servers:
+  - description: Local server
+    url: http://localhost:3000
+
+tags:
+  - name: 
+    description: ""
+  - name: 
+    description: ""
+  - name: 
+    description: ""
+  - name: 
+    description: ""
+
+paths:
+
+
+components:
+ 
