@@ -1,6 +1,7 @@
 import User from '../db/models/user.model.js';
 import Loan from '../db/models/loan.model.js';
 import Book from '../db/models/book.model.js';
+import Category from '../db/models/category.model.js';
 import { Op } from 'sequelize';
 
 const save = async (loan) => {
@@ -92,7 +93,14 @@ const findByUserId = async (id) => {
     include: [
       {
         model: Book,
-        attributes: ['id', 'title', 'description', 'isbn', 'edition', 'stock', 'image']
+        attributes: ['id', 'title', 'description', 'isbn', 'edition', 'stock', 'image'],
+        include: [
+          {
+            model: Category,
+            as: 'categories',
+            attributes: ['id', 'name']
+          }
+        ]
       },
       {
         model: User,

@@ -1,4 +1,5 @@
 
+import { response } from 'express';
 import { userService } from '../services/user.service.js';
 
 
@@ -48,10 +49,23 @@ const deleteUser = (req, res, next) => {
     })
 };
 
+const getRecommendations = (req,res,next)=>{
+  userService.getRecommendations(req.userId)
+  .then((response)=>{
+    res.status(200).json(response)
+  })
+  .catch(
+    (err)=>{
+      next(err)
+    }
+  );
+}
+
 export {
   getAll,
   getById,
   save,
   update,
-  deleteUser
+  deleteUser,
+  getRecommendations
 };
