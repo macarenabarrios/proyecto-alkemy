@@ -27,7 +27,7 @@ const findAll = async (page = 0, size = 10, firstname, lastname, email) => {
 			order: [['id', 'ASC']],
 
 			attributes: {
-				exclude: ["roleId"],
+				exclude: ["roleId","password"],
 			},
 			include: [
 				{
@@ -53,7 +53,7 @@ const findById = async (id) => {
 		
 		const response = await User.findOne({
 			attributes: {
-				exclude: ["roleId"],
+				exclude: ["roleId","password"],
 			},
 			include: [
 				{
