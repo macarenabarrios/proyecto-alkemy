@@ -1,3 +1,4 @@
+import EntityAlreadyExistError from '../exceptions/EntityAlreadyExistsError.js';
 import { roleRepository } from '../repositories/role.repository.js';
 import { userRepository } from '../repositories/user.repository.js';
 import { hashPassword } from '../utils/hash.util.js';
@@ -16,16 +17,20 @@ const getById = async (id) => {
 };
 
 const create = async (user) => {
-  try {
+    const membershipExist = await userRepository.checkIfExist("membershipNumber",user.membershipNumber);
+    if(membershipExist){
+      throw new EntityAlreadyExistError("An user with memberhsip number '#" + user.membershipNumber + "' already exists.")
+    }
+    const emailExist = await userRepository.checkIfExist("email",user.email);
+    if(emailExist){
+      throw new EntityAlreadyExistError("An user with email '" + user.email + "' already exists.")
+    }
     const defaultRole = await roleRepository.findByName("USER");
     user.roleId = defaultRole.id;
     user.isActive = true;
     user.password = await hashPassword(user.password);
     const newUser = await userRepository.save(user);
     return newUser;
-  } catch (error) {
-    throw error
-  }
 };
 
 const update = async (id, user) => {

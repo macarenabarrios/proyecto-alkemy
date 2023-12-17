@@ -120,6 +120,17 @@ const findByEmail = async (email) => {
 	}
 };
 
+const checkIfExist = async (key,value) => {
+	const response = await User.count({
+		where:{
+			[key]:value
+		}
+	})
+
+	return response == 1;
+
+}
+
 export const userRepository = {
 	findAll,
 	findById,
@@ -127,4 +138,5 @@ export const userRepository = {
 	update,
 	deleteById,
 	findByEmail,
+	checkIfExist
 };

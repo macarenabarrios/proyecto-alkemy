@@ -7,23 +7,22 @@ const anyString = {
 };
 
 const membershipNumber = {
-    "any.string": "El campo es obligatorio",
-    "string.min": "Como mínimo debería tener 8 caracteres",
-    "string.max": "Como máximo debería tener 8 caracteres"
+    "any.string": "This field is required",
+    "string.min": "Como mínimo debería tener 6 caracteres",
 };
 const email = {
-    "any.string": "El campo es obligatorio"
+    "any.string": "This field is required"
 };
 
 const password = {
-    "any.string": "El campo es obligatorio",
+    "any.string": "This field is required",
     "string.min": "Como mínimo debería tener 6 caracteres",
     "string.max": "Como máximo debería tener 24 caracteres"
 };
 
 export const Schemas = {
     String: Joi.string().min(2).max(55).required().messages(anyString),
-    MembershipNumber: Joi.string().min(6).max(12).required().messages(membershipNumber),
+    MembershipNumber: Joi.string().min(6).required().messages(membershipNumber),
     Email: Joi.string().required().email().messages(email),
     Password: Joi.string().min(6).max(24).required().messages(password),
 };
