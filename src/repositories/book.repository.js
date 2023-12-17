@@ -2,7 +2,7 @@ import Book from '../db/models/book.model.js';
 import Author from '../db/models/author.model.js';
 import Category from '../db/models/category.model.js';
 import Publisher from '../db/models/publisher.model.js';
-import { Op } from 'sequelize';
+import { Sequelize,Op } from 'sequelize';
 import { authorService } from '../services/author.service.js';
 
 const availableBooks = async (authorName = '', bookTitle = '', categoryName = '', options) => {
@@ -221,6 +221,22 @@ const getByAuthorOrTitle = async (authorId, title) => {
 		}
 	})
 };
+
+const getAllByCategoriesIn = async (categories)=>{
+	console.log(categories);
+	return await Book.findAll({
+    include: [
+      {
+        model: Category,
+        as: 'categories',
+        where: {
+          id: { [Sequelize.Op.in]: categories.map(category => category.id) }
+        }
+      }
+    ]
+  });
+}
+
 export const bookRepository = {
 	availableBooks,
 	deleteBook,
@@ -229,5 +245,6 @@ export const bookRepository = {
 	getByTitle,
 	newBook,
 	update,
-	getByAuthorOrTitle
+	getByAuthorOrTitle,
+	getAllByCategoriesIn	
 };

@@ -2,6 +2,9 @@ import EntityAlreadyExistError from '../exceptions/EntityAlreadyExistsError.js';
 import { roleRepository } from '../repositories/role.repository.js';
 import { userRepository } from '../repositories/user.repository.js';
 import { hashPassword } from '../utils/hash.util.js';
+import {loanService} from '../services/loan.service.js'
+import {bookService} from '../services/book.service.js'
+import BadRequest from '../exceptions/BadRequestError.js'
 
 const getAll = async (page,size,firstname,lastname,email) => {
   const response = await userRepository.findAll(page,size,firstname,lastname,email);
@@ -58,11 +61,39 @@ const findByEmail = async (email) => {
   return response;
 };
 
+const getRecommendations = async (userId) => {
+  try {
+
+    const userLoans = await loanService.getByUserId(userId);
+    const userBookIds = userLoans.map((loan) => loan.book.id);
+    
+    const userCategories = Array.from(
+      new Set(
+        userLoans.flatMap((loan) => loan.book.categories)
+      )
+    );
+
+    const similarBooks = await bookService.getAllByCategories(userCategories);
+
+    const unreadBooks = similarBooks.filter((book) => {
+      return !userBookIds.includes(book.id);
+    });
+
+    const recommendedBooks = unreadBooks.slice(0, 5).map((book) => book.title);
+
+    return recommendedBooks;
+  } catch (error) {
+    console.error(error);
+    throw new BadRequest('Error al obtener recomendaciones');
+  }
+};
+
 export const userService = {
   getAll,
   getById,
   create,
   update,
   deleteUser,
-  findByEmail
+  findByEmail,
+  getRecommendations
 };

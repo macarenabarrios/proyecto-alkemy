@@ -143,6 +143,10 @@ const getByAuthorOrTitle = async (authorId, title) => {
 	return await bookRepository.getByAuthorOrTitle(authorId, title);
 };
 
+const getAllByCategories = async (categories) => {
+	return await bookRepository.getAllByCategoriesIn(categories);
+}
+
 export const bookService = {
 	availableBooks,
 	deleteBook,
@@ -150,5 +154,6 @@ export const bookService = {
 	getById,
 	newBook,
 	update,
-	getByAuthorOrTitle
+	getByAuthorOrTitle,
+	getAllByCategories
 };
