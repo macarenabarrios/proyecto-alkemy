@@ -7,7 +7,6 @@ const router = Router();
 
 router.get('', hasAnyRole(["ADMIN"]), getAll);
 router.get('/:id', isAccountOwner, hasAnyRole(["ADMIN", "USER"]), getById);
-router.post('', save);
 router.put('', isAccountOwner,extractAuthenticated, update);
 router.delete('/:id', isAccountOwner, deleteUser);
 
