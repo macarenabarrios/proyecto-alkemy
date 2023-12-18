@@ -27,76 +27,82 @@ const getByUserId = async (id) => {
 };
 
 const create = async (loan) => {
+
 	let response = {
 		data: null,
 		error: null,
 		availableLoans: null,
 	};
 
-	try {
-		let data = null;
-		if (loan?.email && loan?.isbn) {
-			data = {
-				email: loan.email,
-				isbn: loan.isbn,
-				dueDate: getDueDateIn(15),
-			};
+	let data = null;
+	console.log("LOAN ->>>", loan)
 
-			const user = await userRepository.findByEmail(data.email);
-			const book = await Book.findOne({ where: { isbn: data.isbn } });
+	if (loan?.email && loan?.isbn) {
 
-			if (!book) {
-				response.error = "Libro no encontrado.";
+		data = {
+			email: loan.email,
+			isbn: loan.isbn,
+			dueDate: getDueDateIn(15),
+		};
+
+		const user = await userRepository.findByEmail(data.email);
+		const book = await Book.findOne({ where: { isbn: data.isbn } });
+
+		if (!book) {
+			response.error = "Libro no encontrado.";
+			return response;
+		}
+
+		if (!user) {
+			response.error = "Usuario no encontrado.";
+			return response;
+		}
+
+		const countLoans = await loanRepository.countLoansByUserId(user?.id);
+
+		if (countLoans >= 3) {
+			response.error = "Limite de prestamos alcanzado.";
+			return response;
+		}
+
+		if (book?.stock > 0) {
+
+			await Book.update(
+				{
+					stock: book.stock - 1
+				},
+				{ where: { isbn: data.isbn } }
+			);
+
+			if (user?.id && book?.id) {
+
+				data.userId = user.id;
+				data.bookId = book.id;
+
+				const newLoan = await loanRepository.save(data);
+				console.log("SE LLEGA 4 --->")
+
+				response.availableLoans = 2 - countLoans;
+				response.data = newLoan;
+
+				await sendLoanNotification(user.email, user.firstname, {
+					books: book.title,
+					loanDate: newLoan.startDate,
+					dueDate: newLoan.dueDate,
+				});
+
 				return response;
-			}
 
-			if (!user) {
-				response.error = "Usuario no encontrado.";
-				return response;
-			}
-
-			const countLoans = await loanRepository.countLoansByUserId(user?.id);
-
-			if (countLoans >= 3) {
-				response.error = "Limite de prestamos alcanzado.";
-				return response;
-			}
-
-			if (book?.stock > 0) {
-				await Book.update(
-					{ stock: book.stock - 1 },
-					{ where: { isbn: data.isbn } }
-				);
-
-				if (user?.id && book?.id) {
-					data.userId = user.id;
-					data.bookId = book.id;
-
-					const newLoan = await loanRepository.save(data);
-
-					response.availableLoans = 3 - countLoans;
-					response.data = newLoan;
-
-					await sendLoanNotification(user.email, user.firstname, {
-						books: book.title,
-						loanDate: newLoan.startDate,
-						dueDate: newLoan.dueDate,
-					});
-					return response;
-				} else {
-					response.error = "Usuario o libro no encontrado.";
-					return response;
-				}
 			} else {
-				response.error = `No hay más stock del libro ${book?.title} con ISBN #${book?.isbn}.`;
+				response.error = "Usuario o libro no encontrado.";
 				return response;
 			}
 		} else {
-			response.error = `Faltan datos necesarios para crear un préstamo.`;
+			response.error = `No hay más stock del libro ${book?.title} con ISBN #${book?.isbn}.`;
 			return response;
 		}
-	} catch (error) {
-		response.error = error;
+	} else {
+		response.error = `Faltan datos necesarios para crear un préstamo.`;
 		return response;
 	}
 };
@@ -137,24 +143,24 @@ const returnBook = async (userId, bookId) => {
 };
 
 const getLoanDetails = async (id) => {
-  try {
-    const loan = await loanRepository.findById(id);
-    if (!loan) {
-      throw new Error('Loan not found');
-    }
+	try {
+		const loan = await loanRepository.findById(id);
+		if (!loan) {
+			throw new Error('Loan not found');
+		}
 
-    return {
-      loanId: loan.id,
-      startDate: loan.startDate,
-      dueDate: loan.dueDate,
-      returned: loan.returned,
-    };
-  } catch (error) {
-    throw error;
-  }
+		return {
+			loanId: loan.id,
+			startDate: loan.startDate,
+			dueDate: loan.dueDate,
+			returned: loan.returned,
+		};
+	} catch (error) {
+		throw error;
+	}
 };
 
-const getDueDateIn = (days) =>{
+const getDueDateIn = (days) => {
 	let dueDate = new Date();
 	dueDate.setDate(dueDate.getDate() + days);
 	return dueDate;

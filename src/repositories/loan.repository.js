@@ -5,7 +5,7 @@ import Category from '../db/models/category.model.js';
 import { Op } from 'sequelize';
 
 const save = async (loan) => {
-  const newLoan = await Loan.create(await loan);
+  const newLoan = await Loan.create(loan);
   return newLoan;
 };
 
@@ -143,7 +143,8 @@ const countLoansByUserId = async (id) => {
   try {
     const loanCount = await Loan.count({
       where: {
-        userId: id
+        userId: id,
+        returned: false
       }
     });
     console.log(`Número de préstamos para el usuario con ID ${id}: ${loanCount}`);
