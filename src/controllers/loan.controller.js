@@ -74,7 +74,7 @@ const save = async (req, res, next) => {
   const newLoan = req.body;
   try {
     const response = await loanService.create(newLoan);
-    console.log(response)
+    console.log("RESPONSER ->>", JSON.stringify(response, 0 , 2))
     if (!response?.error) {
       res.status(200).json(
         {
@@ -84,10 +84,10 @@ const save = async (req, res, next) => {
           availableLoans: response?.availableLoans
         }
       )
-      logAction(
-        req,
-        `Usuario ${req.body.email} solicito un prestamo`
-      );
+      // logAction(
+      //   req,
+      //   `Usuario ${req.body.email} solicito un prestamo`
+      // );
     }
     else {
       res.status(500).json(
@@ -147,7 +147,7 @@ const deleteAllLoans = (req, res, next) => {
 };
 
 const returnBook = (req, res, next) => {
-  loanService.returnBook(req.userId, req.body.bookId )
+  loanService.returnBook(req.body.userId, req.body.bookId )
     .then(() => {
       res.status(200).json()
     })

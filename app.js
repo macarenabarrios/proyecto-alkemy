@@ -36,7 +36,7 @@ const swaggerDocs = YAML.load("./src/doc/swagger.doc.yaml");
 // Conexion y generacion de la base de datos
 const main = async () => {
   try {
-    await sequelize.sync();
+    await sequelize.sync({alter:false});
     seed()
     console.log('Connection has been established successfully.');
   } catch (error) {
