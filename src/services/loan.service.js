@@ -85,11 +85,11 @@ const create = async (loan) => {
 				response.availableLoans = 2 - countLoans;
 				response.data = newLoan;
 
-				// await sendLoanNotification(user.email, user.firstname, {
-				// 	books: book.title,
-				// 	loanDate: newLoan.startDate,
-				// 	dueDate: newLoan.dueDate,
-				// });
+				await sendLoanNotification(user.email, user.firstname, {
+					books: book.title,
+					loanDate: newLoan.startDate,
+					dueDate: newLoan.dueDate,
+				});
 
 				return response;
 
