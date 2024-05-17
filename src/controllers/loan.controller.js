@@ -1,3 +1,4 @@
+import { logAction } from '../logger/logger.js';
 import { loanService } from '../services/loan.service.js';
 
 const getAll = async (req, res, next) => {
@@ -74,7 +75,7 @@ const save = async (req, res, next) => {
   const newLoan = req.body;
   try {
     const response = await loanService.create(newLoan);
-    console.log(response)
+    console.log("RESPONSER ->>", JSON.stringify(response, 0 , 2))
     if (!response?.error) {
       res.status(200).json(
         {
@@ -147,7 +148,7 @@ const deleteAllLoans = (req, res, next) => {
 };
 
 const returnBook = (req, res, next) => {
-  loanService.returnBook(req.userId, req.body.bookId )
+  loanService.returnBook(req.body.userId, req.body.bookId )
     .then(() => {
       res.status(200).json()
     })
