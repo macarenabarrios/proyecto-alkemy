@@ -1,0 +1,744 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: Alkemy Library
+  description: Book management api
+  contact:
+    email: 
+
+servers:
+  - description: Local server
+    url: http://localhost:3000/api
+
+tags:
+  - name: auth
+    description: ""
+  - name: users
+    description: ""
+  - name: authors
+    description: ""
+  - name: books
+    description: ""
+  - name: loans
+    description: ""
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: Register a new user
+      description: Enables a new user to sign up to the system by providing required details like username, email, and password. Once registered, they can log in using their credentials.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRegistration"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: object
+                    example: {"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImV4YW1wbGVAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6MTEsImlhdCI6MTcwMjc3MjIwNSwiZXhwIjoxNzAyODU4NjA1fQ.kt17c1lH7PHpAPNxmkZ6DPVMOeyO_BQbHJxIp9qqzGA"}
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: User Login
+      description: Allows a registered user to log in to the system. They must provide their username and password. Upon successful authentication, they gain access based on their role and permissions.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLogin"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imt2b3RoZSIsImlhdCI6MTY5NjUxNTk2M30.BftpR4MMHY4mVTdmgz7c2EqrAQZ0nt_amzpt3lnglLA"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: The fields cannot be empty
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid Credentials"
+
+  /users:
+    get:
+      security:
+        - token: []
+      tags:
+        - users
+      summary: Get user list
+      description: Retrieves a complete list of all users on the system.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    example:
+                      - id: 1
+                        firstname: John
+                        lastname: Doe
+                        email: john.doe@example.com
+                        membershipNumber: M12345678
+                        isActive: true
+                        createdAt: 2023-12-11
+                        updatedAt: 2023-12-11
+                        deletedAt: null
+                        role:
+                         firstname: ADMIN
+                      - id: 2
+                        firstname: Jane
+                        lastname: Doe
+                        email: jane.doe@example.com
+                        membershipNumber: M12345679
+                        isActive: true
+                        createdAt: 2023-12-12
+                        updatedAt: 2023-12-12
+                        deletedAt: null
+                        role:
+                          firstname: USER          
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    put:
+      security:
+        - token: []
+      tags:
+        - users
+      summary: Modify User
+      description: Allows an authenticated administrator to update a user's data. Only users with administrator permissions can make modifications.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRegistration"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: User modified successfully
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedAdmin"
+  /users/{id}:
+    get:
+      security:
+        - token: []
+      tags:
+        - users
+      summary: Get user list
+      description: Retrieves a complete list of all users on the system.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the payment method to modify
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                        id: 1
+                        firstname: John
+                        lastname: Doe
+                        email: john.doe@example.com
+                        membershipNumber: M12345678
+                        isActive: true
+                        createdAt: 2023-12-11
+                        updatedAt: 2023-12-11
+                        deletedAt: null
+                        role:
+                          firstname: ADMIN
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedAdmin"
+    delete:
+      security:
+        - token: []
+      tags:
+        - users
+      summary: Delete a user. 
+      description: Delete a user.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the payment method to modify
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedAdmin"
+  /users/books/recommendations:
+    get:
+      security:
+        - token: []
+      tags:
+        - users
+      summary: Get a list of recommended books
+      description: Allows you to obtain a list of recommended books according to the categories of books that the user read.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    example:
+                      - "To Kill a Mockingbird"
+                      -  "The Hobbit"
+                      -  "Pride and Prejudice"
+                      -  "The Alchemist"
+                      -  "One Hundred Years of Solitude"
+        "401":
+          $ref: "#/components/responses/UnauthorizedAdmin"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+ 
+  /author/authors:
+    get:
+      security:
+        - token: []
+      tags:
+        - authors
+      summary: Get authors list
+      description: Retrieves a complete list of all authors on the system.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  books:
+                    type: array
+                    example:
+                      - id: 1
+                        firstName: F. Scott
+                        lastName: Fitzgerald
+                        birthdate: 1896-09-24T00:00:00.000Z
+                        nationality: American
+                        books:
+                              id: 12
+                              title: The Great Gatsby
+                              description: A classic novel about the American Dream
+                              isbn: 9783161484100
+                              edition: 1st Edition
+                              stock: 50
+                              image: great_gatsby.jpg
+                              average: 0
+                              isActive: true
+                              createdAt: 2023-12-06T18:11:34.000Z
+                              updatedAt: 2023-12-06T18:11:34.000Z
+                              deletedAt: null
+                              publisherId: 1
+                              Book_Author:
+                                          authorId: 1
+                                          bookId: 12
+                      - id: 2
+                        firstName: Harper
+                        lastName: Lee
+                        birthdate: 1926-04-28T00:00:00.000Z
+                        nationality: American
+                        books:
+                              id: 13
+                              title: To Kill a Mockingbird
+                              description: A novel about racial injustice in the American South
+                              isbn: 9780061120083
+                              edition: 1st Edition
+                              stock: 40
+                              image: mockingbird.jpg
+                              average: 0
+                              isActive: true
+                              createdAt: 2023-12-06T18:11:34.000Z
+                              updatedAt: 2023-12-06T18:11:34.000Z
+                              deletedAt: null
+                              publisherId: 2
+                              Book_Author:
+                                          authorId: 2
+                                          bookId: 13             
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedAdmin"
+  /author/{id}:
+    get:
+      security:
+        - token: []
+      tags:
+        - authors
+      summary: Get author
+      description: Retrieves an author according to their ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The author ID to search for.
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                        id: 1
+                        firstName: F. Scott
+                        lastName: Fitzgerald
+                        birthdate: 1896-09-24T00:00:00.000Z
+                        nationality: American
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedAdmin"
+  /author/createAuthor:
+    post:
+      security:
+        - token: []
+      tags:
+        - authors
+      summary: Create an author
+      description: Allows an administrator to create an author.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Author"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                        id: 1
+                        firstName: F. Scott
+                        lastName: Fitzgerald
+                        birthdate: 1896-09-24T00:00:00.000Z
+                        nationality: American
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: The fields cannot be empty
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid Credentials"
+
+  /book/id/{id}:
+    get:
+      security:
+        - token: []
+      tags:
+        - books
+      summary: Get a book
+      description: Retrieves a book from the database.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the book to search for it.
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                        id: 13
+                        title: To Kill a Mockingbird
+                        description: A novel about racial injustice in the American South
+                        isbn: 9780061120083
+                        edition: 1st Edition
+                        stock: 40
+                        image: mockingbird.jpg
+                        average: 0
+                        isActive: true
+                        createdAt: 2023-12-06T18:11:34.000Z
+                        updatedAt: 2023-12-06T18:11:34.000Z
+                        deletedAt: null
+                        publisherId: 2
+                        categories: 
+                              - id: 1
+                                name: Terror
+                        authors:
+                              - id: 2
+                                firstName: Harper
+                                lastName: Lee
+                                birthdate: 1926-04-28T00:00:00.000Z
+                                nationality: American
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedAdmin"
+  /book/{id}:
+    put:
+      security:
+        - token: []
+      tags:
+        - books
+      summary: Modify Book
+      description: Allows an authenticated administrator to update data for a workbook. Only users with administrator permissions can make modifications.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateBook"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the book to search for it.
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                        id: 13
+                        title: To Kill a Mockingbird
+                        description: A novel about racial injustice in the American South
+                        isbn: 9780061120083
+                        edition: 1st Edition
+                        stock: 40
+                        image: mockingbird.jpg
+                        average: 0
+                        isActive: true
+                        createdAt: 2023-12-06T18:11:34.000Z
+                        updatedAt: 2023-12-06T18:11:34.000Z
+                        deletedAt: null
+                        publisherId: 2
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedAdmin"
+    delete:
+      security:
+        - token: []
+      tags:
+        - books
+      summary: Delete a book
+      description: Delete a book.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the payment method to modify
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Deleted book.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedAdmin"
+
+  /loans:
+    get:
+      security:
+        - token: []
+      tags:
+        - loans
+      summary: Get loans list
+      description: Retrieves a complete list of all loans on the system.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                        success: true
+                        message: The loan was created satisfactorily.
+                        data:
+                          - id: 1
+                            startDate: 2023-12-18T01:54:12.587Z
+                            dueDate: 2024-01-02T01:54:12.567Z
+                            book:
+                                  id: 12
+                                  title: The Great Gatsby
+                                  description: A classic novel about the American Dream
+                                  isbn: 9783161484100
+                                  edition: 1st Edition
+                                  stock: 50
+                                  image: great_gatsby.jpg
+                            user:
+                                  id: 1
+                                  email: fernandoDiaz@example.com,
+                                  membership_number: M12345678
+                          - id: 2
+                            startDate: 2023-12-18T01:54:12.587Z
+                            dueDate: 2024-01-02T01:54:12.567Z
+                            book:
+                                  id: 15
+                                  title: The Catcher in the Rye
+                                  description: A novel about teenage angst and alienation
+                                  isbn: 9780316769480
+                                  edition: 1st Edition
+                                  stock: 44
+                                  image: catcher.jpg
+                            user:
+                                  id: 3
+                                  email: example2@example.com
+                                  membership_number: M12345612             
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedAdmin"
+    post:
+      security:
+        - token: []
+      tags:
+        - loans
+      summary: Create loan
+      description: Create loan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/loan"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                        success: true
+                        message: The loan was created satisfactorily.
+                        data:
+                            startDate: 2023-12-18T01:54:12.587Z
+                            returned: false
+                            id: 5
+                            dueDate: 2024-01-02T01:54:12.567Z
+                            userId: 1
+                            bookId: 19
+                        availableLoans: 1
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: The fields cannot be empty
+
+components:
+  schemas:
+    UserRegistration:
+      type: object
+      properties:
+        firstname:
+          type: string
+          example: Fernando
+        lastname:
+          type: string
+          example: Diaz
+        email:
+          type: string
+          example: fernandoDiaz@example.com
+        password:
+          type: string
+          example: 123456
+        membershipNumber:
+          type: string
+          example: M12345678
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+          example: fernandoDiaz@example.com
+        password:
+          type: string
+          example: 123456
+    Author:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: firstname example
+        lastName:
+          type: string
+          example: lastname example
+        birthdate:
+          type: date
+          example: 1899-11-24T00:00:00.000Z
+        nationality:
+          type: string
+          example: American
+    updateBook:
+      type: object
+      properties:
+        title:
+          type: string
+          example: To Kill a Mockingbird
+        description:
+          type: string
+          example: A novel about racial injustice in the American South
+        edition:
+          type: string
+          example: 1st Edition
+        stock:
+          type: integer
+          example: 40
+    loan:
+      type: object
+      properties:
+        email:
+          type: string
+          example: fernandoDiaz@example.com
+        isbn:
+          type: integer
+          example: 9780141439518
+
+  responses:
+    BadRequest:
+      description: "Bad Request - This could be due to missing fields, invalid data, etc"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "The fields cannot be empty"
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Not authenticated"
+    UnauthorizedAdmin:
+      description: Unauthorized - This could be due to not being authenticated or not having admin privileges"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Can be 'Not authenticated' or 'You do not have administrator permissions'.
+
+
+  securitySchemes:
+    token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
