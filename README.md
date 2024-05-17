@@ -17,11 +17,17 @@ Clona el repositorio y ejecuta npm install para instalar las dependencias:
 Crea un archivo .env en la raíz del proyecto con las siguientes variables de entorno:
 
 `GMAIL_USER=tu_email@gmail.com`
+
 `GMAIL_PASS=tu_contraseña`
+
 `DB_HOST=localhost`
+
 `DB_USER=root`
+
 `DB_PASS=tu_contraseña`
+
 `DB_NAME=nombre_de_tu_base_de_datos`
+
 `JWT_SECRET=tu_secreto_jwt`
 
 ## Ejecución
@@ -75,8 +81,9 @@ Supongamos que quieres probar la creación de un usuario en la ruta /api/auth co
 Método: POST
 URL: http://localhost:3000/api/auth/register
 Cuerpo:
-    {
-	  "firstname": "John",
+    
+    { 
+      "firstname": "John",
 
       "lastname": "Doe",
 
