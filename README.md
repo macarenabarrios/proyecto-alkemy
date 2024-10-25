@@ -1,20 +1,20 @@
-# Proyecto Alkemy - Librería
+# Alkemy Project - Library
 
-## Descripción
+## Description
 
-Este proyecto es una aplicación backend para la gestión de una librería, construida con Node.js, Express, MySQL y Sequelize como ORM. La aplicación permite a los usuarios gestionar préstamos de libros, realizar reseñas, recibir notificaciones por correo electrónico y en tiempo real, y chatear con otros usuarios conectados.
+This project is a backend application for managing a library, built with Node.js, Express, MySQL, and Sequelize as the ORM. The application allows users to manage book loans, post reviews, receive email and real-time notifications, and chat with other connected users.
 
-## Instalación
+## Installation
 
-Clona el repositorio y ejecuta npm install para instalar las dependencias:
+Clone the repository and run npm install to install dependencies:
 
 `$ git clone https://github.com/macarenabarrios/proyecto-alkemy.git`
 `$ cd proyecto-alkemy`
 `$ npm install`
 
-## Configuración
+## Configuration
 
-Crea un archivo .env en la raíz del proyecto con las siguientes variables de entorno:
+Create a .env file in the project root with the following environment variables:
 
 `GMAIL_USER=tu_email@gmail.com`
 
@@ -30,57 +30,59 @@ Crea un archivo .env en la raíz del proyecto con las siguientes variables de en
 
 `JWT_SECRET=tu_secreto_jwt`
 
-## Ejecución
+## Execution
 
-Para iniciar el servidor en modo desarrollo, ejecuta:
+To start the server in development mode, run:
 
 `$ npm run dev`
 
-El servidor se ejecutará en http://localhost:3000.
+The server will run at http://localhost:3000.
 
-## Recomendación para pruebas
+## Testing Recommendation
 
-Dado que este proyecto de backend no incluye un frontend, es altamente recomendable utilizar herramientas como Postman o Insomnia para probar las rutas y la funcionalidad de la API. Estas herramientas permiten enviar solicitudes HTTP y verificar las respuestas, facilitando el desarrollo y la depuración.
+Since this backend project doesn’t include a frontend, it’s highly recommended to use tools like Postman or Insomnia to test the API routes and functionality. These tools allow you to send HTTP requests and check responses, making development and debugging easier.
 
 #### Postman
 
-Postman es una popular herramienta de desarrollo API que permite crear, probar y documentar solicitudes HTTP de manera fácil y visual.
+Postman is a popular API development tool that makes it easy to create, test, and document HTTP requests in a visual way.
 
-##### Instalación
-Puedes descargar Postman desde [aquí](https://www.postman.com/downloads/).
+##### Installation
 
-##### Uso
+You can download Postman [here](https://www.postman.com/downloads/).
 
-1. **Crear una nueva colección:**
+##### Usage
+
+1. **Create a New Collection: Group API routes into collections to keep them organized.**
 
 Agrupa las rutas de la API en colecciones para mantenerlas organizadas.
 
-2. **Crear una nueva solicitud:**
+2. **Create a New Request:**
 
-   - Selecciona el método HTTP (GET, POST, PUT, DELETE, etc.).
+   - Select the HTTP method (GET, POST, PUT, DELETE, etc.).
 
-   - Ingresa la URL de la API.
+   - Enter the API URL.
 
-   - Añade los encabezados necesarios (por ejemplo, Content-Type: application/json).
+   - Add any necessary headers (e.g., Content-Type: application/json).
 
-   - Añade el cuerpo de la solicitud si es necesario (en formato JSON).
+   - Add the request body if needed (in JSON format).
 
-3. **Enviar la solicitud:**
+3. **Send the Request:**
 
-Haz clic en "Send" para enviar la solicitud y ver la respuesta del servidor.
+Click "Send" to submit the request and view the server's response.
 
-4. **Guardar las solicitudes:**
+4. **Save Requests:**
 
-Guarda las solicitudes en la colección para reutilizarlas fácilmente.
+Save requests in the collection for easy reuse.
 
-##### Ejemplo de Solicitud
+##### Sample Request
 
-Supongamos que quieres probar la creación de un usuario en la ruta /api/auth con un método POST. Aquí tienes un ejemplo de cómo hacerlo:
+Suppose you want to test user creation at the /api/auth route with a POST method. Here’s an example:
 
-**Crear una nueva solicitud:**
-Método: POST
+**Create a New Request:**
+
+Method: POST
 URL: http://localhost:3000/api/auth/register
-Cuerpo:
+Body:
     
     { 
       "firstname": "John",
@@ -94,85 +96,91 @@ Cuerpo:
       "membershipNumber": "M131a9"
 	 }
 
-Luego, **enviar la solicitud** y verificar la respuesta.
+Then, **send the request** and verify the response.
 
-## Modelos y relaciones
+## Models and relationships
 
-El proyecto contiene los siguientes modelos y sus relaciones:
+The project includes the following models and their relationships:
 
-- **User**: Representa a los usuarios de la aplicación.
+- **User**: Represents application users.
 
-- **Role**: Representa los roles que pueden tener los usuarios.
+- **Role**: Represents user roles.
 
-- **Author**: Representa a los autores de los libros.Book: Representa a los libros.
+- **Author**: Represents book authors.
 
-- **Category**: Representa las categorías de los libros.
+- **Book**: Represents books.
 
-- **BookCategory**: Tabla intermedia para la relación muchos a muchos entre Book y Category.
+- **Category**: Represents book categories.
 
-- **Publisher**: Representa a las editoriales de los libros.
+- **BookCategory**: Intermediate table for the many-to-many relationship between Book and Category.
 
-- **Library**: Representa las bibliotecas de los usuarios.
+- **Publisher**: Represents book publishers.
 
-- **Review**: Representa las reseñas de los libros.
+- **Library**: Represents user libraries.
 
-- **Loan**: Representa los préstamos de los libros.
+- **Review**: Represents book reviews.
 
-- **Event**: Representa los eventos de la biblioteca.
+- **Loan**: Represents book loans.
 
-![Base de datos](/src/utils/img/Models.png)
+- **Event**: Represents library events.
+
+![Data base](/src/utils/img/Models.png)
 
 ## Clean architecture
 
-El proyecto sigue el principio de Arquitectura Limpia, separando las responsabilidades en capas bien definidas: Controladores, Servicios, Repositorios y Modelos. Este enfoque mejora la mantenibilidad y escalabilidad del código.
+The project follows Clean Architecture principles, organizing responsibilities into well-defined layers: Controllers, Services, Repositories, and Models. This approach enhances code maintainability and scalability.
 
-#### Controladores
+#### Routes
 
-Los controladores gestionan las solicitudes HTTP entrantes y las respuestas. Son responsables de recibir las entradas del usuario, procesarlas (normalmente llamando a servicios), y devolver las respuestas adecuadas.
+Routes are organized in the routes folder and follow a clean architecture by separating logic into controllers, services, and repositories.
+
+#### Controllers
+
+Controllers manage incoming HTTP requests and responses. They receive user inputs, process them (typically by calling services), and return appropriate responses.
 
 Las rutas están organizadas en la carpeta `routes` y siguen una arquitectura limpia dividiendo la lógica en controladores, servicios y repositorios.
 
-#### Servicios
+#### Services
 
-Los servicios encapsulan la lógica de negocio y coordinan las operaciones entre los controladores y los repositorios. Esta capa se asegura de que las reglas de negocio se apliquen correctamente.
+Services encapsulate business logic and coordinate operations between controllers and repositories. This layer ensures business rules are applied correctly.
 
-#### Repositorios
+#### Repositories
 
-Los repositorios gestionan las operaciones de acceso a datos. Son responsables de la comunicación con la base de datos a través de los modelos, encapsulando las consultas SQL o ORM.
+Repositories handle data access operations. They are responsible for communicating with the database through the models, encapsulating SQL or ORM queries.
 
-#### Modelos
+#### Models
 
-Los modelos representan la estructura de los datos y las relaciones en la base de datos. Utilizamos Sequelize para definir estos modelos y sus asociaciones.
+Models represent the structure and relationships of data in the database. We use Sequelize to define these models and their associations.
 
-#### Integración de las Capas
+#### Layer Integration
 
-- **Controladores**: Reciben las solicitudes del cliente, las validan y llaman a los servicios necesarios.
-- **Servicios**: Contienen la lógica de negocio y coordinan las acciones entre los controladores y los repositorios.
-- **Repositorios**: Realizan las operaciones de acceso a datos, comunicándose con la base de datos a través de los modelos.
-- **Modelos**: Definen la estructura de los datos y las relaciones entre las tablas de la base de datos.
+- **Controllers**: Receive client requests, validate them, and call the necessary services.
+- **Services**: Contain business logic and coordinate actions between controllers and repositories.
+- **Repositories**: Perform data access operations, communicating with the database through models.
+- **Models**: Define data structure and relationships between database tables.
 
-Esta estructura permite una separación clara de responsabilidades, facilitando la prueba, el mantenimiento y la escalabilidad del proyecto. Al seguir la Arquitectura Limpia, nos aseguramos de que cada capa tenga una única responsabilidad, promoviendo un código más organizado y manejable.
+This structure ensures a clear separation of responsibilities, making the project easier to test, maintain, and scale. By following Clean Architecture, we ensure each layer has a single responsibility, promoting a more organized and manageable codebase.
 
-## Funcionalidades
+## Features
 
-#### Notificaciones por Correo Electrónico
+#### Email Notifications
 
-Se envían correos electrónicos cuando se crean nuevos libros y nuevos libros de nuevos autores utilizando `nodemailer`. Se utilizan las siguientes funciones para el envío de correos electrónicos y notificaciones:
+Emails are sent when new books are added, as well as when books from new authors are added, using `nodemailer`. The following functions are used to send emails and notifications:
 
-- **sendEmail**: Envía correos electrónicos.
+- **sendEmail**: Sends emails.
 
-- **sendLoanNotification**: Notifica sobre nuevos préstamos.
+- **sendLoanNotification**: Notifies about new loans.
 
-- **sendNewNotification**: Notifica sobre nuevos libros y nuevos autores.
+- **sendNewNotification**: Notifies about new books and new authors.
 
-#### Notificaciones en Tiempo Real y Chat
+#### Real-Time Notifications and Chat
 
-Utiliza `socket.io` para permitir a los usuarios recibir notificaciones en tiempo real y chatear con otros usuarios conectados:
+The project uses `socket.io` to allow users to receive real-time notifications and chat with other connected users:
 
-- **configureSocketIO**: Configura Socket.IO con el servidor.
+- **configureSocketIO**: Configures Socket.IO with the server.
 
-- **notifyNewBookAvailable**: Notifica cuando un nuevo libro está disponible.
+- **notifyNewBookAvailable**: Notifies when a new book is available.
 
-- **chat message**: Maneja los mensajes de chat en tiempo real.
+- **chat message**: Handles real-time chat messages.
 
-*Este proyecto proporciona una base sólida para la gestión de una librería, integrando funcionalidades avanzadas como notificaciones en tiempo real y un sistema de préstamos y reseñas de libros.*
+*This project provides a solid foundation for library management, integrating advanced features such as real-time notifications and a system for book loans and reviews.*
